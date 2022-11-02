@@ -51,7 +51,21 @@ Further company information will be sourced from [Yahoo Finance API](https://syn
 
 Company logos will be sourced through [Clearbit Logo API](https://dashboard.clearbit.com/docs#logo-api)
 
+**Brief Outline**  
+When a vistor arrives at _2Degrees_'s landing page, it will show a list of stocks charted (with Chart.js) according to their environmental score. Visitor's will filter stocks according to:  
 
+* Top stocks (according to market cap)
+* User's Followed Stocks
+* Industry
+* Sector
+* Country
 
+Clicking on a stock's logo will navigate to a page with additional information about the company. 
 
-Chart.js
+Users will be asked to sign up or login when attempting to add or remove stocks from their followed list. The average ESG ratings for their followed list will be calculate and displayed in their profile. 
+
+Users passwords will be securely encrypted with BCrypt.
+
+In order to prevent large request overheads, the website will need to cache data form the source APIs. Stock ESG-ratings and company profiles will be queried when their timestamp passes 30 days. Any financial data will be queried on demand, since these numbers are more volatile.
+
+A proposed [database schema can be viewed here!](https://github.com/johnathan-booy/2Degrees/raw/main/Proposal/Database-Schema.pdf)
