@@ -13,9 +13,9 @@ class Company(db.Model):
     industry_id = db.Column(
         db.Integer,
         db.ForeignKey('industries.id'))
-    city_id = db.Column(
+    location_id = db.Column(
         db.Integer,
-        db.ForeignKey('cities.id'))
+        db.ForeignKey('locations.id'))
     website = db.Column(
         db.String())
     summary = db.Column(

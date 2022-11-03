@@ -2,9 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from models.company import Company
 from models.user import User
 from models.exchange import Exchange
-from models.city import City
-from models.region import Region
-from models.country import Country
+from models.location import Location
 from models.industry import Industry
 from models.sector import Sector
 

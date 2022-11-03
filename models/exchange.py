@@ -1,4 +1,4 @@
-from database import db
+from models import db
 
 
 class Exchange(db.Model):
@@ -9,6 +9,6 @@ class Exchange(db.Model):
         primary_key=True)
     name = db.Column(
         db.String())
-    city_id = db.Column(
+    location_id = db.Column(
         db.Integer,
-        db.ForeignKey("cities.id"))
+        db.ForeignKey("locations.id"))
