@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from models import db, connect_db
+from models import db, connect_db, User, Company, Exchange, City, Region, Country, Industry
 
 app = Flask(__name__)
 
