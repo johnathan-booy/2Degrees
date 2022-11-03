@@ -1,4 +1,4 @@
-# 2Degrees
+# 2Degrees Investing
 
 ### Resources
 
