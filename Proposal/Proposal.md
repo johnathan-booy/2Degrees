@@ -1,4 +1,4 @@
-#Capstone Proposal
+# Capstone Proposal
 ### 2Degrees Investing
 **What goal will it achieve?**  
 ESG ratings give investors valuable insight into the environmental and social impact of the stocks they choose. Unfortunately, these ratings are not easily accessible for private investors, making it difficult to prioritize ethical business practices in their portfolios. ‘Sustainable Investing’ will aim to visualize ESG ratings, allowing investors to make informed decisions about the companies they support.
