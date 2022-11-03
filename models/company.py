@@ -10,9 +10,9 @@ class Company(db.Model):
     exchange_symbol = db.Column(
         db.String(),
         db.ForeignKey('exchanges.symbol'))
-    industry_id = db.Column(
+    sector_id = db.Column(
         db.Integer,
-        db.ForeignKey('industries.id'))
+        db.ForeignKey('sectors.id'))
     location_id = db.Column(
         db.Integer,
         db.ForeignKey('locations.id'))
