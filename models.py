@@ -3,7 +3,6 @@ from models.company import Company
 from models.user import User
 from models.exchange import Exchange
 from models.location import Location
-from models.industry import Industry
 from models.sector import Sector
 
 db = SQLAlchemy()
