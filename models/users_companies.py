@@ -6,10 +6,12 @@ users_companies = db.Table(
         'user_id',
         db.Integer,
         db.ForeignKey('users.id'),
-        primary_key=True),
+        primary_key=True
+    ),
     db.Column(
         'company_symbol',
         db.String(),
         db.ForeignKey('companies.symbol'),
-        primary_key=True)
+        primary_key=True
+    )
 )
