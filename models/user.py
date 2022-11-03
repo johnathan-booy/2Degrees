@@ -1,24 +1,37 @@
 from models import db
+from models.users_companies import users_companies
 
 
 class User(db.Model):
     """Model for the users table"""
+
     __tablename__ = "users"
+
     id = db.Column(
         db.Integer,
         primary_key=True,
-        autoincrement=True)
+        autoincrement=True
+    )
     username = db.Column(
         db.String(),
         unique=True,
-        nullable=False)
+        nullable=False
+    )
     password = db.Column(
         db.String(),
-        nullable=False)
+        nullable=False
+    )
     email = db.Column(
         db.String(),
-        nullable=False)
+        nullable=False
+    )
     first_name = db.Column(
-        db.String())
+        db.String()
+    )
     last_name = db.Column(
-        db.String())
+        db.String()
+    )
+    companies = db.relationship(
+        "Company",
+        secondary=users_companies
+    )
