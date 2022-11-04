@@ -1,4 +1,4 @@
-from models import db
+from database import db
 
 users_companies = db.Table(
     "users_companies",

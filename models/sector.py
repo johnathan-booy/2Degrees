@@ -1,4 +1,4 @@
-from models import db
+from database import db
 
 
 class Sector(db.Model):

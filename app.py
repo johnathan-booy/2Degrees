@@ -1,9 +1,16 @@
 from flask import Flask, render_template
-from models import db, connect_db, User, Company, Exchange, Location, Sector, users_companies
+from database import db, connect_db
+from models.company import Company
+from models.exchange import Exchange
+from models.location import Location
+from models.sector import Sector
+from models.user import User
+from models.users_companies import users_companies
+
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///cupcakes'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///2degrees'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
