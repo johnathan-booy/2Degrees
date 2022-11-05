@@ -66,6 +66,7 @@ db.session.commit()
 ############
 apple = Company(
     symbol='AAPL',
+    name='Apple Inc.',
     exchange_symbol=nasdaq.symbol,
     sector_id=technology.id,
     location_id=cupertino.id,

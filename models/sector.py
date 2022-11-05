@@ -6,6 +6,9 @@ class Sector(db.Model):
 
     __tablename__ = "sectors"
 
+    def __repr__(self) -> str:
+        return f"<Sector {self.name}>"
+
     id = db.Column(
         db.Integer,
         primary_key=True,

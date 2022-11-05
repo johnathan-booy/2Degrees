@@ -7,6 +7,9 @@ class User(db.Model):
 
     __tablename__ = "users"
 
+    def __repr__(self) -> str:
+        return f"<User  {self.username}>"
+
     id = db.Column(
         db.Integer,
         primary_key=True,

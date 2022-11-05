@@ -6,6 +6,9 @@ class Location(db.Model):
 
     __tablename__ = "locations"
 
+    def __repr__(self) -> str:
+        return f"<Location  {self.city}, {self.region}, {self.country}>"
+
     id = db.Column(
         db.Integer,
         primary_key=True,

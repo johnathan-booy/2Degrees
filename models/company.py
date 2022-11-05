@@ -6,9 +6,16 @@ class Company(db.Model):
 
     __tablename__ = "companies"
 
+    def __repr__(self) -> str:
+        return f"<Company  '{self.name}'  {self.symbol} >"
+
     symbol = db.Column(
         db.String(),
         primary_key=True
+    )
+    name = db.Column(
+        db.String(),
+        nullable=False
     )
     exchange_symbol = db.Column(
         db.String(),

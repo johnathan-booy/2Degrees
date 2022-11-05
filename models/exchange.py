@@ -6,6 +6,9 @@ class Exchange(db.Model):
 
     __tablename__ = "exchanges"
 
+    def __repr__(self) -> str:
+        return f"<Exchange  {self.symbol}  {self.location.country}>"
+
     symbol = db.Column(
         db.String(),
         primary_key=True
