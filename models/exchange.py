@@ -17,3 +17,8 @@ class Exchange(db.Model):
         db.Integer,
         db.ForeignKey("locations.id")
     )
+    companies = db.relationship(
+        "Company",
+        backref="exchange",
+        cascade="all, delete"
+    )

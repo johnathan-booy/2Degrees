@@ -33,5 +33,6 @@ class User(db.Model):
     )
     companies = db.relationship(
         "Company",
-        secondary=users_companies
+        secondary=users_companies,
+        backref="users"
     )

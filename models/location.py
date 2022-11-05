@@ -23,3 +23,13 @@ class Location(db.Model):
         db.String(),
         nullable=False
     )
+    companies = db.relationship(
+        "Company",
+        backref="location",
+        cascade="all, delete"
+    )
+    exchanges = db.relationship(
+        "Exchange",
+        backref="location",
+        cascade="all, delete"
+    )

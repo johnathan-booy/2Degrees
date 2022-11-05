@@ -15,3 +15,8 @@ class Sector(db.Model):
         db.String(),
         nullable=False
     )
+    companies = db.relationship(
+        "Company",
+        backref="sector",
+        cascade="all, delete"
+    )
