@@ -14,8 +14,7 @@ class Company(db.Model):
         primary_key=True
     )
     name = db.Column(
-        db.String(),
-        nullable=False
+        db.String()
     )
     exchange_symbol = db.Column(
         db.String(),
@@ -34,6 +33,10 @@ class Company(db.Model):
     )
     summary = db.Column(
         db.Text
+    )
+    esg_available = db.Column(
+        db.Boolean,
+        default=True
     )
     esg_last_retrieved = db.Column(
         db.DateTime
