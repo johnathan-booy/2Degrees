@@ -20,6 +20,14 @@ class Exchange(db.Model):
         db.Integer,
         db.ForeignKey("cities.id")
     )
+    region_id = db.Column(
+        db.Integer,
+        db.ForeignKey("regions.id")
+    )
+    country_id = db.Column(
+        db.Integer,
+        db.ForeignKey("countries.id")
+    )
     companies = db.relationship(
         "Company",
         backref="exchange",

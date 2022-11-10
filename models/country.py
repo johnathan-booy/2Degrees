@@ -23,3 +23,13 @@ class Country(db.Model):
         backref="country",
         cascade="all, delete"
     )
+    companies = db.relationship(
+        "Company",
+        backref="country",
+        cascade="all, delete"
+    )
+    exchanges = db.relationship(
+        "Exchange",
+        backref="country",
+        cascade="all, delete"
+    )

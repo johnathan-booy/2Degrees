@@ -27,3 +27,13 @@ class Region(db.Model):
         backref="region",
         cascade="all, delete"
     )
+    companies = db.relationship(
+        "Company",
+        backref="region",
+        cascade="all, delete"
+    )
+    exchanges = db.relationship(
+        "Exchange",
+        backref="region",
+        cascade="all, delete"
+    )
