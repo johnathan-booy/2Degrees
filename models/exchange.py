@@ -16,9 +16,9 @@ class Exchange(db.Model):
     name = db.Column(
         db.String()
     )
-    location_id = db.Column(
+    city_id = db.Column(
         db.Integer,
-        db.ForeignKey("locations.id")
+        db.ForeignKey("cities.id")
     )
     companies = db.relationship(
         "Company",

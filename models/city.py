@@ -1,38 +1,34 @@
 from database import db
 
 
-class Location(db.Model):
-    """Model for locations table"""
+class City(db.Model):
+    """Model for cities table"""
 
-    __tablename__ = "locations"
+    __tablename__ = "cities"
 
     def __repr__(self) -> str:
-        return f"<Location  {self.city}, {self.region}, {self.country}>"
+        return f"<City  {self.name}>"
 
     id = db.Column(
         db.Integer,
         primary_key=True,
         autoincrement=True
     )
-    city = db.Column(
+    name = db.Column(
         db.String(),
         nullable=False
     )
-    region = db.Column(
-        db.String(),
-        nullable=False
-    )
-    country = db.Column(
-        db.String(),
-        nullable=False
+    region_id = db.Column(
+        db.Integer,
+        db.ForeignKey("regions.id")
     )
     companies = db.relationship(
         "Company",
-        backref="location",
+        backref="city",
         cascade="all, delete"
     )
     exchanges = db.relationship(
         "Exchange",
-        backref="location",
+        backref="city",
         cascade="all, delete"
     )

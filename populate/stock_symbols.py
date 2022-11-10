@@ -55,7 +55,3 @@ class Slickcharts():
             if not Company.query.filter_by(symbol=symbol).all():
                 db.session.add(Company(symbol=symbol))
             db.session.commit()
-
-
-slickcharts = Slickcharts()
-slickcharts.populate_db()

@@ -24,15 +24,22 @@ class Company(db.Model):
         db.Integer,
         db.ForeignKey('sectors.id')
     )
-    location_id = db.Column(
+    city_id = db.Column(
         db.Integer,
-        db.ForeignKey('locations.id')
+        db.ForeignKey('cities.id')
     )
     website = db.Column(
         db.String()
     )
     summary = db.Column(
         db.Text
+    )
+    profile_available = db.Column(
+        db.Boolean,
+        default=True
+    )
+    profile_last_retrieved = db.Column(
+        db.DateTime
     )
     esg_available = db.Column(
         db.Boolean,
