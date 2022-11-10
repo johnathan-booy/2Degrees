@@ -6,7 +6,7 @@ from models.region import Region
 from models.country import Country
 from models.company import Company
 from populate.stock_symbols import StockSymbols
-from populate.profile import StockProfile
+from populate.stock_profiles import StockProfiles
 
 db.drop_all()
 db.create_all()
@@ -81,8 +81,7 @@ db.session.commit()
 StockSymbols.populate_db()
 
 
-# ############
-# # STOCK PROFILES
-# ############
-# stockprofile = StockProfile()
-# stockprofile.update()
+############
+# STOCK PROFILES
+############
+StockProfiles.populate()
