@@ -5,7 +5,7 @@ from models.city import City
 from models.region import Region
 from models.country import Country
 from models.company import Company
-from populate.stock_symbols import Slickcharts
+from populate.stock_symbols import StockSymbols
 from populate.profile import StockProfile
 
 db.drop_all()
@@ -78,12 +78,11 @@ db.session.commit()
 ############
 # STOCK SYMBOLS
 ############
-slickcharts = Slickcharts()
-slickcharts.populate_db()
+StockSymbols.populate_db()
 
 
 # ############
 # # STOCK PROFILES
 # ############
-stockprofile = StockProfile()
-stockprofile.update()
+# stockprofile = StockProfile()
+# stockprofile.update()
