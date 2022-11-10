@@ -50,7 +50,7 @@ class StockSymbols():
         return list(set().union(nasdaq_100, sp500, dowjones))
 
     @classmethod
-    def populate_db(cls):
+    def populate(cls):
         """Compare symbols to DB, and add company rows when not already included"""
         stock_symbols = cls()
         for symbol in stock_symbols.symbols:

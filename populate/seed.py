@@ -78,7 +78,7 @@ db.session.commit()
 ############
 # STOCK SYMBOLS
 ############
-StockSymbols.populate_db()
+StockSymbols.populate()
 
 
 ############
