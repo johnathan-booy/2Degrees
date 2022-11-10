@@ -4,6 +4,7 @@ from models.exchange import Exchange
 from models.city import City
 from models.region import Region
 from models.country import Country
+from models.company import Company
 from populate.stock_symbols import Slickcharts
 from populate.profile import StockProfile
 
@@ -84,5 +85,5 @@ slickcharts.populate_db()
 # ############
 # # STOCK PROFILES
 # ############
-# stockprofile = StockProfile()
-# stockprofile.update()
+stockprofile = StockProfile()
+stockprofile.update()
