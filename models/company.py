@@ -7,7 +7,7 @@ class Company(db.Model):
     __tablename__ = "companies"
 
     def __repr__(self) -> str:
-        return f"<Company  '{self.name}'  {self.symbol} >"
+        return f"<Company  {self.symbol} '{self.name}'>"
 
     symbol = db.Column(
         db.String(),
