@@ -95,3 +95,49 @@ class Company(db.Model):
     total_grade = db.Column(
         db.String()
     )
+
+    def serialize(self):
+        location = {
+            "city": self.city.name,
+            "region": self.region.name,
+            "country": self.country.name,
+        }
+
+        profile = {
+            "symbol": self.symbol,
+            "name": self.name,
+            "exchange_symbol": self.exchange_symbol,
+            "sector": self.sector.name,
+            "location": location,
+            "website": self.website,
+            "summary": self.summary
+        }
+
+        esg_ratings = None
+        if self.environmental_score and self.social_score and self.governance_score and self.total_score:
+            esg_ratings = {
+                "scores": {
+                    "environmental_score": self.environmental_score,
+                    "social_score": self.social_score,
+                    "governance_score": self.governance_score,
+                    "total_score": self.total_score
+                },
+                "levels": {
+                    "environmental_levels": self.environmental_level,
+                    "social_levels": self.social_level,
+                    "governance_levels": self.governance_level,
+                    "total_levels": self.total_level
+                },
+                "grades": {
+                    "environmental_grade": self.environmental_grade,
+                    "social_grade": self.social_grade,
+                    "governance_grade": self.governance_grade,
+                    "total_grade": self.total_grade
+                }
+            }
+
+        response = {
+            "profile": profile,
+            "esg_ratings": esg_ratings
+        }
+        return response
