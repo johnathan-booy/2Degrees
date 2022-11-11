@@ -71,10 +71,9 @@ class ESGRatings():
     def error(self, group, resp) -> dict:
         """Log information about a request error"""
         symbols = [company.symbol for company in group]
-
         error = {
             "status_code": resp.status_code,
-            "reason": resp.reason,
+            "reason": resp.json()['Error'],
             "symbols": symbols,
         }
         self.errors.append(error)
@@ -176,13 +175,12 @@ class ESGRatings():
 
 
 esg_ratings = ESGRatings.populate()
-import pdb
-pdb.set_trace()
 
 # TEST WITH THE FOLLOWING QUERY IN PSQL
 """ 
 SELECT
     symbol,
+    name,
     exchange_symbol,
     environmental_score,
     social_score,
@@ -193,5 +191,7 @@ SELECT
 FROM 
     companies
 WHERE
-    exchange_symbol IS NOT NULL; 
+    exchange_symbol IS NOT NULL
+ORDER BY
+    environmental_score DESC; 
 """
