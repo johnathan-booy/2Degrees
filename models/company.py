@@ -97,17 +97,18 @@ class Company(db.Model):
     )
 
     def serialize(self):
+        print(self.symbol)
         location = {
-            "city": self.city.name,
-            "region": self.region.name,
-            "country": self.country.name,
+            "city": self.city.name if self.city else None,
+            "region": self.region.name if self.region else None,
+            "country": self.country.name if self.country else None
         }
 
         profile = {
             "symbol": self.symbol,
             "name": self.name,
             "exchange_symbol": self.exchange_symbol,
-            "sector": self.sector.name,
+            "sector": self.sector.name if self.sector else None,
             "location": location,
             "website": self.website,
             "summary": self.summary
