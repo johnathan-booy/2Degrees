@@ -97,8 +97,11 @@ class Company(db.Model):
     )
 
     @classmethod
-    def ranked(cls, type, quantity, best=True):
-        """Return best companies based on ESG and T ratings"""
+    def ranked(cls, type, quantity, ranking) -> list:
+        """Return companies ranked best or worst based on ESGT ratings"""
+
+        if ranking != "worst" and ranking != "best":
+            return
 
         q1 = None
         q2 = cls.total_score
@@ -118,15 +121,15 @@ class Company(db.Model):
             cls.query
             .filter(q1 != None)
             .order_by(
-                q1.desc() if best else q1,
-                q2.desc() if best else q2)
+                q1.desc() if ranking == "best" else q1,
+                q2.desc() if ranking == "best" else q2)
             .limit(quantity)
             .all()
         )
 
         return [company.serialize() for company in companies]
 
-    def serialize(self):
+    def serialize(self) -> dict:
         """Return a dict representation of Company"""
         location = {
             "city": self.city.name if self.city else None,
