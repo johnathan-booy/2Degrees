@@ -97,7 +97,6 @@ class Company(db.Model):
     )
 
     def serialize(self):
-        print(self.symbol)
         location = {
             "city": self.city.name if self.city else None,
             "region": self.region.name if self.region else None,
