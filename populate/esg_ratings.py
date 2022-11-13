@@ -36,7 +36,7 @@ class ESGRatings():
 
             if not resp.ok:
                 esg.error(group, resp)
-                continue
+                return esg
 
             ratings = resp.json()
             updated = []
@@ -95,6 +95,7 @@ class ESGRatings():
                     Company.esg_last_retrieved == None
                 )
             )
+            .order_by(Company.esg_last_retrieved.desc())
             .all()
         )
 
