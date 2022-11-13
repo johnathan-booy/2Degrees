@@ -96,7 +96,38 @@ class Company(db.Model):
         db.String()
     )
 
+    @classmethod
+    def ranked(cls, type, quantity, best=True):
+        """Return best companies based on ESG and T ratings"""
+
+        q1 = None
+        q2 = cls.total_score
+
+        match type:
+            case "E":
+                q1 = cls.environmental_score
+            case "S":
+                q1 = cls.social_score
+            case "G":
+                q1 = cls.governance_score
+            case "T":
+                q1 = cls.total_score
+                q2 = cls.environmental_score
+
+        companies = (
+            cls.query
+            .filter(q1 != None)
+            .order_by(
+                q1.desc() if best else q1,
+                q2.desc() if best else q2)
+            .limit(quantity)
+            .all()
+        )
+
+        return [company.serialize() for company in companies]
+
     def serialize(self):
+        """Return a dict representation of Company"""
         location = {
             "city": self.city.name if self.city else None,
             "region": self.region.name if self.region else None,

@@ -56,7 +56,20 @@ def get_companies():
     return jsonify(data)
 
 
-@app.route('/api/esg/top')
+@app.route('/api/companies/best/<type>', methods=['GET'])
+def get_best_companies(type):
+
+    type = type.upper()
+    quantity = request.args.get("quantity", 10)
+
+    if type not in "ESGT" or len(type) != 1:
+        raise APIInvalidError("Type must be one of E, S, G, or T")
+
+    companies = Company.ranked(type, quantity)
+
+    return jsonify(companies)
+
+
 @app.errorhandler(APIError)
 def handle_exception(err):
     """Return custom JSON when APIError or its children are raised"""
