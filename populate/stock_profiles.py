@@ -1,3 +1,15 @@
+"""
+Update profiles from Yahoo Finance API
+
+Should be called as a class constructor method.
+
+    StockProfiles.populate() -> Populates outdated profiles.
+
+    StockProfiles.populate(update='all') -> Populates profiles for all stocks
+
+    StockProfiles.populate(update='symbol', symbol='AAPL') -> Populates profile for given stock symbol
+"""
+
 import requests
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import or_
@@ -22,20 +34,13 @@ class StockProfiles():
         self.params = {"modules": "assetProfile"}
         self.headers = {'User-agent': 'Mozilla/5.0'}
         self.companies = self.get_companies()
+        self.updated = []
         self.errors = []
 
     @classmethod
     def populate(cls, update="outdated", symbol=""):
         """
         Populates stock profiles and returns an instance of the StockProfiles class. 
-
-        Should be called as a class constructor method.
-
-            Stockprofiles.populate() -> Populates outdated profiles.
-
-            Stockprofiles.populate(update='all') -> Populates profiles for all stocks
-
-            Stockprofiless.populate(update='symbol', symbol='AAPL') -> Populates profile for given stock symbol
         """
 
         sp = cls(update, symbol)
@@ -46,7 +51,6 @@ class StockProfiles():
             if not resp.ok:
                 """Log the error and remove the company from list"""
                 sp.errors.append(sp.log_error(company, resp))
-                sp.companies.remove(company)
                 continue
 
             data = resp.json()['quoteSummary']['result'][0]['assetProfile']
@@ -56,6 +60,8 @@ class StockProfiles():
             sp.update_sector(company, data)
             sp.update_location(company, data)
             company.profile_last_retrieved = sp.datetime_now
+
+            sp.updated.append(company)
 
         db.session.commit()
         return sp
@@ -183,7 +189,8 @@ class StockProfiles():
             if not city:
                 print(f"Added city -> {city_name}")
                 city = City(name=city_name,
-                            region_id=company.region_id)
+                            region_id=company.region_id,
+                            country_id=company.country_id)
                 db.session.add(city)
                 db.session.commit()
             company.city_id = city.id
