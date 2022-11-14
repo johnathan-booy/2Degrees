@@ -1,5 +1,19 @@
+"""
+Updates ESG Ratings from ESG Enterprise API
+
+Should be called as a class constructor method.
+
+    esg = ESGRatings.populate()
+
+Return object will include:
+
+    esg.errors -> Logged errors (often 429 for TooManyRequests)
+    esg.companies -> All companies initially included in the update
+    esg.updated -> Companies that were succesfully updated
+
+"""
+
 import requests
-import json
 from api_tokens import ESG_ENTERPRISE_TOKEN
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import or_
@@ -19,7 +33,7 @@ class ESGRatings():
         self.datetime_now = datetime.now(timezone.utc)
         self.datetime_oldest = self.datetime_now - timedelta(days=28)
         self.companies = self.get_companies()
-        self.not_found = []
+        self.updated = []
         self.errors = []
         self.exchange_symbols = self.get_exchange_symbols()
 
@@ -39,7 +53,6 @@ class ESGRatings():
                 return esg
 
             ratings = resp.json()
-            updated = []
 
             for rating in ratings:
                 symbol = rating.get('stock_symbol')
@@ -58,13 +71,8 @@ class ESGRatings():
                 esg.update_exchange(rating, company)
                 company.esg_last_retrieved = esg.datetime_now
 
-                updated.append(company)
+                esg.updated.append(company)
             db.session.commit()
-
-            for company in group:
-                if company not in updated:
-                    esg.companies.remove(company)
-                    esg.not_found.append(company)
 
         return esg
 
