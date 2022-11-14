@@ -1,4 +1,10 @@
-"""Get stock symbols for nasdaq s&p 500 and dowjones"""
+"""
+Retrieve stock symbols from the S&P500, NASDAQ100 and DOWJONES
+
+Run like:
+
+    stock_symbols = StockSymbols.populate()
+"""
 
 from bs4 import BeautifulSoup
 import requests
@@ -13,6 +19,16 @@ class StockSymbols():
         self.sp500_url = "https://www.slickcharts.com/sp500"
         self.dowjones_url = "https://www.slickcharts.com/dowjones"
         self.symbols = self.collect_symbols()
+
+    @classmethod
+    def populate(cls):
+        """Compare symbols to DB, and add company rows when not already included"""
+        stock_symbols = cls()
+        for symbol in stock_symbols.symbols:
+            if not Company.query.filter_by(symbol=symbol).all():
+                db.session.add(Company(symbol=symbol))
+            db.session.commit()
+        return stock_symbols
 
     def extract_html(self, url):
         """Get HTML with a specified User-Agent"""
@@ -48,13 +64,3 @@ class StockSymbols():
         sp500 = self.scrape_symbols(self.sp500_url)
         dowjones = self.scrape_symbols(self.dowjones_url)
         return list(set().union(nasdaq_100, sp500, dowjones))
-
-    @classmethod
-    def populate(cls):
-        """Compare symbols to DB, and add company rows when not already included"""
-        stock_symbols = cls()
-        for symbol in stock_symbols.symbols:
-            if not Company.query.filter_by(symbol=symbol).all():
-                db.session.add(Company(symbol=symbol))
-            db.session.commit()
-        return stock_symbols
