@@ -1,4 +1,5 @@
 from database import db
+from models.country import Country
 
 
 class Region(db.Model):
@@ -37,3 +38,42 @@ class Region(db.Model):
         backref="region",
         cascade="all, delete"
     )
+
+    @classmethod
+    def add(cls, region_name, country_name):
+        """
+        Constructor function for the region model
+
+        Checks to avoid duplication
+
+        Returns the region
+        """
+
+        country = Country.add(country_name)
+
+        region = cls.query.filter_by(
+            name=region_name, country_id=country.id).first()
+
+        if not region:
+            region = cls(name=region_name, country_id=country.id)
+            db.session.add(region)
+            db.session.commit()
+
+        return region
+
+    @classmethod
+    def remove(cls, region_name, country_name):
+        """
+        Removes a region from the database by name
+
+        Returns the region
+        """
+        country = Country.query.filter_by(name=country_name).one()
+
+        region = cls.query.filter_by(
+            name=region_name, country_id=country.id).first()
+
+        db.session.delete(region)
+        db.session.commit()
+
+        return region

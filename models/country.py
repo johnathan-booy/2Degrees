@@ -18,6 +18,11 @@ class Country(db.Model):
         db.String(),
         nullable=False
     )
+    cities = db.relationship(
+        "City",
+        backref="country",
+        cascade="all, delete"
+    )
     regions = db.relationship(
         "Region",
         backref="country",
@@ -33,3 +38,38 @@ class Country(db.Model):
         backref="country",
         cascade="all, delete"
     )
+
+    @classmethod
+    def add(cls, name):
+        """
+        Constructor function for the country model
+
+        Checks to avoid duplication
+
+        Returns the country
+        """
+
+        country = cls.query.filter_by(name=name).first()
+
+        if country:
+            return country
+
+        country = cls(name=name)
+        db.session.add(country)
+        db.session.commit()
+
+        return country
+
+    @classmethod
+    def remove(cls, name):
+        """
+        Removes a country from the database by name
+
+        Returns the country
+        """
+
+        country = cls.query.filter_by(name=name).one()
+        db.session.delete(country)
+        db.session.commit()
+
+        return country

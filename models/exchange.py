@@ -1,4 +1,5 @@
 from database import db
+from models.city import City
 
 
 class Exchange(db.Model):
@@ -33,3 +34,44 @@ class Exchange(db.Model):
         backref="exchange",
         cascade="all, delete"
     )
+
+    @classmethod
+    def add(cls, symbol: str, name: str, city=None):
+        """
+        Constructor function for the exchange model
+
+        Checks to avoid duplication
+
+        Returns the exchange
+        """
+
+        exchange = cls.query.filter_by(symbol=symbol).first()
+
+        if not exchange:
+            exchange = cls(symbol=symbol)
+
+        exchange.name = name
+
+        if city:
+            exchange.city = city
+            exchange.region_id = city.region_id
+            exchange.country_id = city.country_id
+
+        db.session.add(exchange)
+        db.session.commit()
+
+        return city
+
+    @classmethod
+    def remove(cls, symbol):
+        """
+        Removes an exchange from the database by symbol
+
+        Returns the exchange
+        """
+        exchange = cls.query.filter_by(symbol=symbol).one()
+
+        db.session.delete(exchange)
+        db.session.commit()
+
+        return exchange

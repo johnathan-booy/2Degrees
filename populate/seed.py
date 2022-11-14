@@ -8,80 +8,57 @@ from models.company import Company
 from populate.stock_symbols import StockSymbols
 from populate.stock_profiles import StockProfiles
 
-db.drop_all()
 db.create_all()
-
-
-############
-# COUNTRY
-############
-us = Country(
-    name='United States',
-)
-
-countries = [
-    us
-]
-db.session.add_all(countries)
-db.session.commit()
-
-############
-# REGIONS
-############
-ny = Region(
-    name='NY',
-    country_id=us.id
-)
-
-regions = [
-    ny
-]
-db.session.add_all(regions)
-db.session.commit()
 
 ############
 # CITIES
 ############
-new_york = City(
-    name='New York City',
-    region_id=ny.id
+new_york = City.add(
+    'New York City',
+    'NY',
+    'United States'
 )
 
-cities = [
-    new_york
-]
-db.session.add_all(cities)
-db.session.commit()
+toronto = City.add(
+    'Toronto',
+    'ON',
+    'Canada'
+)
+
+sydney = City.add(
+    'Sydney',
+    'NSW',
+    'Australia'
+)
 
 ############
 # EXCHANGES
 ############
-nasdaq = Exchange(
+nasdaq = Exchange.add(
     symbol='NASDAQ',
-    name="Nasdaq, Inc.",
-    city_id=new_york.id
+    name="Nasdaq",
+    city=new_york
 )
 
-nyse = Exchange(
+nyse = Exchange.add(
     symbol='NYSE',
     name="New York Stock Exchange",
-    city_id=new_york.id
+    city=new_york
 )
 
-exchanges = [
-    nasdaq,
-    nyse
-]
-db.session.add_all(exchanges)
-db.session.commit()
+amex = Exchange.add(
+    symbol='AMEX',
+    name="American Stock Exchange",
+    city=new_york
+)
 
-############
-# STOCK SYMBOLS
-############
-StockSymbols.populate()
-
-
-############
-# STOCK PROFILES
-############
-StockProfiles.populate()
+tse = Exchange.add(
+    symbol="TSE",
+    name="Toronto Stock Exchange",
+    city=toronto
+)
+asx = Exchange.add(
+    symbol='ASX',
+    name='Australian Securities Exchange',
+    city=sydney
+)
