@@ -13,10 +13,11 @@ from models.city import City
 class StockProfiles():
     """Queries outdated stock"""
 
-    def __init__(self, update_all=False) -> None:
+    def __init__(self, update, symbol) -> None:
         self.datetime_now = datetime.now(timezone.utc)
         self.datetime_oldest = self.datetime_now - timedelta(days=365)
-        self.update_all = update_all
+        self.update = update
+        self.symbol = symbol
         self.endpoint = "https://query1.finance.yahoo.com/v10/finance/quoteSummary"
         self.params = {"modules": "assetProfile"}
         self.headers = {'User-agent': 'Mozilla/5.0'}
@@ -24,10 +25,20 @@ class StockProfiles():
         self.errors = []
 
     @classmethod
-    def populate(cls, update_all=False):
-        """Updates outdated profiles, and returns an instance of StockProfiles class"""
+    def populate(cls, update="outdated", symbol=""):
+        """
+        Populates stock profiles and returns an instance of the StockProfiles class. 
 
-        sp = cls(update_all)
+        Should be called as a class constructor method.
+
+            Stockprofiles.populate() -> Populates outdated profiles.
+
+            Stockprofiles.populate(update='all') -> Populates profiles for all stocks
+
+            Stockprofiless.populate(update='symbol', symbol='AAPL') -> Populates profile for given stock symbol
+        """
+
+        sp = cls(update, symbol)
 
         for company in sp.companies:
             resp = sp.request(company.symbol)
@@ -58,21 +69,25 @@ class StockProfiles():
         }
 
     def get_companies(self) -> list:
-        if self.update_all:
-            return Company.query.all()
-        else:
-            return (
-                Company
-                .query
-                .filter(
-                    Company.profile_available == True,
-                    or_(
-                        Company.profile_last_retrieved < self.datetime_oldest,
-                        Company.profile_last_retrieved == None
+        """Get companies based on the update argument"""
+        match self.update:
+            case "all":
+                return Company.query.all()
+            case "outdated":
+                return (
+                    Company
+                    .query
+                    .filter(
+                        Company.profile_available == True,
+                        or_(
+                            Company.profile_last_retrieved < self.datetime_oldest,
+                            Company.profile_last_retrieved == None
+                        )
                     )
+                    .all()
                 )
-                .all()
-            )
+            case "symbol":
+                return [Company.query.filter_by(symbol=self.symbol).first()]
 
     def request(self, symbol: list) -> dict:
         """Send get request for one company symbol to Yahoo Finance API"""
