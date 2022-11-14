@@ -2,11 +2,6 @@ from app import app
 from database import db
 from models.exchange import Exchange
 from models.city import City
-from models.region import Region
-from models.country import Country
-from models.company import Company
-from populate.stock_symbols import StockSymbols
-from populate.stock_profiles import StockProfiles
 
 db.create_all()
 

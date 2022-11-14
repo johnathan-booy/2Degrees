@@ -3,11 +3,11 @@ Update profiles from Yahoo Finance API
 
 Should be called as a class constructor method.
 
-    StockProfiles.populate() -> Populates outdated profiles.
+    p = Profiles.populate() -> Populates outdated profiles.
 
-    StockProfiles.populate(update='all') -> Populates profiles for all stocks
+    p = Profiles.populate(update='all') -> Populates profiles for all stocks
 
-    StockProfiles.populate(update='symbol', symbol='AAPL') -> Populates profile for given stock symbol
+    p = Profiles.populate(update='symbol', symbol='AAPL') -> Populates profile for given stock symbol
 """
 
 import requests
@@ -22,8 +22,8 @@ from models.region import Region
 from models.city import City
 
 
-class StockProfiles():
-    """Queries outdated stock"""
+class Profiles():
+    """Queries outdated profiles"""
 
     def __init__(self, update, symbol) -> None:
         self.datetime_now = datetime.now(timezone.utc)
@@ -40,31 +40,31 @@ class StockProfiles():
     @classmethod
     def populate(cls, update="outdated", symbol=""):
         """
-        Populates stock profiles and returns an instance of the StockProfiles class. 
+        Populates profiles and returns an instance of the Profiles class. 
         """
 
-        sp = cls(update, symbol)
+        p = cls(update, symbol)
 
-        for company in sp.companies:
-            resp = sp.request(company.symbol)
+        for company in p.companies:
+            resp = p.request(company.symbol)
 
             if not resp.ok:
                 """Log the error and remove the company from list"""
-                sp.errors.append(sp.log_error(company, resp))
+                p.errors.append(p.log_error(company, resp))
                 continue
 
             data = resp.json()['quoteSummary']['result'][0]['assetProfile']
 
-            sp.update_website(company, data)
-            sp.update_summary(company, data)
-            sp.update_sector(company, data)
-            sp.update_location(company, data)
-            company.profile_last_retrieved = sp.datetime_now
+            p.update_website(company, data)
+            p.update_summary(company, data)
+            p.update_sector(company, data)
+            p.update_location(company, data)
+            company.profile_last_retrieved = p.datetime_now
 
-            sp.updated.append(company)
+            p.updated.append(company)
 
         db.session.commit()
-        return sp
+        return p
 
     def log_error(self, company, resp) -> dict:
         """Log information about a request error"""

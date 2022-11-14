@@ -10,7 +10,6 @@ Return object will include:
     esg.errors -> Logged errors (often 429 for TooManyRequests)
     esg.companies -> All companies initially included in the update
     esg.updated -> Companies that were succesfully updated
-
 """
 
 import requests
@@ -42,7 +41,7 @@ class ESGRatings():
         """Calls the necessary functions to update outdated ESG ratings"""
         esg = cls()
 
-        # Each API query can request up to 50 ESG Ratings
+        # Each API query will request about 10
         groups = divide_list(esg.companies, 50)
 
         for group in groups:

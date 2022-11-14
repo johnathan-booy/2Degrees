@@ -3,7 +3,7 @@ Retrieve stock symbols from the S&P500, NASDAQ100 and DOWJONES
 
 Run like:
 
-    stock_symbols = StockSymbols.populate()
+    s = Symbols.populate()
 """
 
 from bs4 import BeautifulSoup
@@ -13,7 +13,7 @@ from database import db
 from models.company import Company
 
 
-class StockSymbols():
+class Symbols():
     def __init__(self) -> None:
         self.nasdaq_url = "https://www.slickcharts.com/nasdaq100"
         self.sp500_url = "https://www.slickcharts.com/sp500"
@@ -23,12 +23,12 @@ class StockSymbols():
     @classmethod
     def populate(cls):
         """Compare symbols to DB, and add company rows when not already included"""
-        stock_symbols = cls()
-        for symbol in stock_symbols.symbols:
+        s = cls()
+        for symbol in s.symbols:
             if not Company.query.filter_by(symbol=symbol).all():
                 db.session.add(Company(symbol=symbol))
             db.session.commit()
-        return stock_symbols
+        return s
 
     def extract_html(self, url):
         """Get HTML with a specified User-Agent"""
