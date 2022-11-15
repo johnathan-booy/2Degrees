@@ -30,30 +30,17 @@ def homepage():
     return render_template("base.html")
 
 
-@ app.route('/api/companies', methods=['GET'])
-def get_companies():
-    """Get information about companies from given symbols"""
+@ app.route('/api/companies/<symbol>', methods=['GET'])
+def get_companies(symbol):
+    """Get all companies with the provided symbol"""
 
-    q = request.args.get("q", default="", type=str)
-    q = q.replace(" ", "")
-
-    if q == "":
-        raise APIInvalidError("No symbol provided")
-
-    symbols = q.split(",")
-
-    data = []
-    for symbol in symbols:
-        symbol = symbol.upper()
-        company = Company.query.get(symbol)
-        if not company:
-            continue
-        data.append(company.serialize())
-
-    if not data:
+    symbol = symbol.upper()
+    companies = Company.query.filter_by(symbol=symbol).all()
+    if not companies:
         raise APINotFoundError("Symbol not available")
 
-    return jsonify(data)
+    data = [c.serialize() for c in companies]
+    return jsonify({"companies": data})
 
 
 @app.route('/api/companies/ranked/<type>', methods=['GET'])
