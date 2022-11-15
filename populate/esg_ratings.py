@@ -41,8 +41,7 @@ class ESGRatings():
         """Calls the necessary functions to update outdated ESG ratings"""
         esg = cls()
 
-        # Each API query will request about 10
-        groups = divide_list(esg.companies, 50)
+        groups = divide_list(esg.companies, 10)
 
         for group in groups:
             resp = esg.request(group)
@@ -64,10 +63,8 @@ class ESGRatings():
                 if not company:
                     continue
 
-                esg.update_name(rating, company)
                 esg.update_date(rating, company)
                 esg.update_ratings(rating, company)
-                esg.update_exchange(rating, company)
                 company.esg_last_retrieved = esg.datetime_now
 
                 esg.updated.append(company)
@@ -108,8 +105,9 @@ class ESGRatings():
 
     def request(self, companies: list):
         """Send get requests to ESG Enterprise. Max 50 company symbols per request"""
-        symbols = [company.symbol for company in companies]
-        q = ",".join(symbols)
+        # Requests are made like nyse:aapl,nasdaq:msft
+        pairs = [f"{c.exchange_symbol}:{c.symbol}" for c in companies]
+        q = ",".join(pairs)
         resp = (
             requests.get(
                 "https://tf689y3hbj.execute-api.us-east-1.amazonaws.com/prod/authorization/search",
@@ -120,12 +118,6 @@ class ESGRatings():
             )
         )
         return resp
-
-    def update_name(self, rating: dict, company) -> None:
-        """Update company name based on json from ESG Enterprise API"""
-
-        company.name = rating.get(
-            'company_name', company.name)
 
     def update_date(self, rating: dict, company) -> None:
         """Update esg_last_updated based on json from ESG Enterprise API"""
@@ -165,26 +157,7 @@ class ESGRatings():
         company.total_grade = rating.get(
             'total_grade', company.total_grade)
 
-    def update_exchange(self, rating: dict, company) -> None:
-        """Update exchange symbol based on json from ESG Enterprise API"""
 
-        exchange_symbol = rating.get('exchange_symbol')
-
-        if not exchange_symbol:
-            return
-
-        if exchange_symbol not in self.exchange_symbols:
-            new_exchange = Exchange(symbol=exchange_symbol)
-            self.exchange_symbols.append(exchange_symbol)
-            db.session.add(new_exchange)
-            db.session.commit()
-
-        company.exchange_symbol = exchange_symbol
-
-
-esg_ratings = ESGRatings.populate()
-
-# TEST WITH THE FOLLOWING QUERY IN PSQL
 """ 
 SELECT
     symbol,
@@ -199,7 +172,7 @@ SELECT
 FROM 
     companies
 WHERE
-    exchange_symbol IS NOT NULL
+    exchange_score IS NOT NULL
 ORDER BY
     environmental_score DESC; 
 """
