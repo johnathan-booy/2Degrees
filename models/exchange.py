@@ -29,6 +29,10 @@ class Exchange(db.Model):
         db.Integer,
         db.ForeignKey("countries.id")
     )
+    esg_available = db.Column(
+        db.Boolean,
+        default=True
+    )
     companies = db.relationship(
         "Company",
         backref="exchange",

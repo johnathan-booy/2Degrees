@@ -10,8 +10,8 @@ users_companies = db.Table(
     ),
     db.Column(
         'company_symbol',
-        db.String(),
-        db.ForeignKey('companies.symbol'),
+        db.Integer,
+        db.ForeignKey('companies.id'),
         primary_key=True
     )
 )

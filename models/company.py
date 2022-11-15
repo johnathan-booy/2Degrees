@@ -7,19 +7,30 @@ class Company(db.Model):
     __tablename__ = "companies"
 
     def __repr__(self) -> str:
-        return f"<Company  {self.symbol} '{self.name}'>"
+        return f"<Company  {self.symbol} {self.exchange_symbol} '{self.name}'>"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True,
+        autoincrement=True
+    )
 
     symbol = db.Column(
         db.String(),
-        primary_key=True
+        nullable=False
     )
-    name = db.Column(
-        db.String()
-    )
+
     exchange_symbol = db.Column(
         db.String(),
-        db.ForeignKey('exchanges.symbol')
+        db.ForeignKey('exchanges.symbol'),
+        nullable=False
     )
+
+    name = db.Column(
+        db.String(),
+        nullable=False
+    )
+
     sector_id = db.Column(
         db.Integer,
         db.ForeignKey('sectors.id')
