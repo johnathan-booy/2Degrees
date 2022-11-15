@@ -108,7 +108,7 @@ class Company(db.Model):
     )
 
     @classmethod
-    def ranked(cls, type, count, ranking) -> list:
+    def ranked(cls, type: str, count: int, offset: int, ranking: str) -> list:
         """Return companies ranked best or worst based on ESGT ratings"""
 
         if ranking != "worst" and ranking != "best":
@@ -135,10 +135,11 @@ class Company(db.Model):
                 q1.desc() if ranking == "best" else q1,
                 q2.desc() if ranking == "best" else q2)
             .limit(count)
+            .offset(offset)
             .all()
         )
 
-        return [company.serialize() for company in companies]
+        return companies
 
     def serialize(self) -> dict:
         """Return a dict representation of Company"""
