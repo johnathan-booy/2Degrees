@@ -43,20 +43,30 @@ def get_companies(symbol):
     return jsonify({"companies": data})
 
 
-@app.route('/api/companies/ranked/<type>', methods=['GET'])
-def get_ranked_companies(type):
-
+@app.route('/api/companies/ranked/best/<type>', methods=['GET'])
+def get_best_companies(type):
+    """Get the best companies based on Environmental, Social, Governance or Total scores"""
     type = type.upper()
-    quantity = request.args.get("quantity", 10)
-    ranking = request.args.get("ranking", "best").lower()
+    count = request.args.get("count", 10, type=int)
 
     if type not in "ESGT" or len(type) != 1:
         raise APIInvalidError("Type must be one of E, S, G, or T")
 
-    if ranking != 'best' and ranking != 'worst':
-        raise APIInvalidError("Ranking must be one of 'best' or 'worst'")
+    companies = Company.ranked(type, count, 'best')
 
-    companies = Company.ranked(type, quantity, ranking)
+    return jsonify(companies)
+
+
+@app.route('/api/companies/ranked/worst/<type>', methods=['GET'])
+def get_worst_companies(type):
+    """Get the worst companies based on Environmental, Social, Governance or Total scores"""
+    type = type.upper()
+    count = request.args.get("count", 10, type=int)
+
+    if type not in "ESGT" or len(type) != 1:
+        raise APIInvalidError("Type must be one of E, S, G, or T")
+
+    companies = Company.ranked(type, count, 'worst')
 
     return jsonify(companies)
 

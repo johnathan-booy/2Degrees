@@ -108,7 +108,7 @@ class Company(db.Model):
     )
 
     @classmethod
-    def ranked(cls, type, quantity, ranking) -> list:
+    def ranked(cls, type, count, ranking) -> list:
         """Return companies ranked best or worst based on ESGT ratings"""
 
         if ranking != "worst" and ranking != "best":
@@ -134,7 +134,7 @@ class Company(db.Model):
             .order_by(
                 q1.desc() if ranking == "best" else q1,
                 q2.desc() if ranking == "best" else q2)
-            .limit(quantity)
+            .limit(count)
             .all()
         )
 
