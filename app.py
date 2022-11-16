@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, redirect, jsonify, request
 from database import db, connect_db
 from exceptions import APIError, APINotFoundError, APIInvalidError
 from models.company import Company
@@ -27,7 +27,13 @@ connect_db(app)
 @ app.route('/')
 def homepage():
     """Show homepage"""
-    return render_template("base.html")
+    return redirect('/companies/best')
+
+
+@app.route("/companies/best")
+def list_top_companies():
+    """List the best companies. Default order is environmental"""
+    return render_template("best.html")
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])
@@ -46,6 +52,7 @@ def get_companies(symbol):
 @app.route('/api/companies/ranked/<ranking>/<type>', methods=['GET'])
 def get_best_companies(ranking, type):
     """Get the best companies based on Environmental, Social, Governance or Total scores"""
+
     ranking = ranking.lower()
     type = type.upper()
     count = request.args.get("count", 10, type=int)

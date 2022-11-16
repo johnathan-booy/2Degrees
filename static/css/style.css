@@ -1,0 +1,14 @@
+.logo {
+	display: flex;
+	justify-content: center;
+	width: 3.5rem;
+	height: 3.5rem;
+	border-radius: 50%;
+	outline: 0.06rem solid rgb(181, 181, 181);
+}
+
+.logo img {
+	object-fit: contain;
+	margin: auto;
+	width: 85%;
+}
