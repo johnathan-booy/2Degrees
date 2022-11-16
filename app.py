@@ -81,6 +81,13 @@ def get_best_companies(ranking, type):
     return jsonify({"companies": data})
 
 
+@app.route('/api/esg/ranges')
+def get_esg_ranges():
+    """Get the highest and lowest scores for each category (E, S, G and T)"""
+    ranges = Company.esg_ranges()
+    return jsonify({"ranges": ranges})
+
+
 @app.errorhandler(APIError)
 def handle_exception(err):
     """Return custom JSON when APIError or its children are raised"""

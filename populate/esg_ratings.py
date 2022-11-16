@@ -172,7 +172,7 @@ SELECT
 FROM 
     companies
 WHERE
-    exchange_score IS NOT NULL
+    environmental_score IS NOT NULL
 ORDER BY
     environmental_score DESC; 
 """

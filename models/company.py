@@ -141,6 +141,41 @@ class Company(db.Model):
 
         return companies
 
+    @classmethod
+    def esg_ranges(cls) -> dict:
+        """Return the highest and lowests scores for each category in the database"""
+        qe = cls.environmental_score
+        qs = cls.social_score
+        qg = cls.governance_score
+        qt = cls.total_score
+
+        max_e = cls.query.filter(qe != None).order_by(
+            qe.desc()).first().environmental_score
+        max_s = cls.query.filter(qs != None).order_by(
+            qs.desc()).first().social_score
+        max_g = cls.query.filter(qg != None).order_by(
+            qg.desc()).first().governance_score
+        max_t = cls.query.filter(qt != None).order_by(
+            qt.desc()).first().total_score
+
+        min_e = cls.query.filter(qe != None).order_by(
+            qe).first().environmental_score
+        min_s = cls.query.filter(
+            qs != None).order_by(qs).first().social_score
+        min_g = cls.query.filter(qg != None).order_by(
+            qg).first().governance_score
+        min_t = cls.query.filter(
+            qt != None).order_by(qt).first().total_score
+
+        ranges = {
+            "environmental": {"min": min_e, "max": max_e},
+            "social": {"min": min_s, "max": max_s},
+            "governance": {"min": min_g, "max": max_g},
+            "total": {"min": min_t, "max": max_t}
+        }
+
+        return ranges
+
     def serialize(self) -> dict:
         """Return a dict representation of Company"""
         location = {
@@ -183,6 +218,7 @@ class Company(db.Model):
             }
 
         response = {
+            "id": self.id,
             "profile": profile,
             "esg_ratings": esg_ratings
         }
