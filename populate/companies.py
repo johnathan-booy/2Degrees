@@ -19,18 +19,23 @@ class Companies():
         self.nasdaq_url = "https://www.slickcharts.com/nasdaq100"
         self.sp500_url = "https://www.slickcharts.com/sp500"
         self.dowjones_url = "https://www.slickcharts.com/dowjones"
+        self.tsx60_url = "https://www.theglobeandmail.com/investing/markets/indices/TXSX/components/s"
         self.companies = self.get_companies()
 
     @classmethod
     def populate(cls):
         """Compare companies to DB, and add company rows when not already included"""
         c = cls()
+        print("###########################")
+        print("Populating DB")
+        print("###########################")
         for company in c.companies:
 
             symbol, exchange_symbol, name = company
             esg_available = True
 
             if not Exchange.query.filter_by(symbol=exchange_symbol).first():
+                print("Added Exchange ->", exchange_symbol)
                 db.session.add(
                     Exchange(symbol=exchange_symbol, esg_available=False)
                 )
@@ -40,7 +45,7 @@ class Companies():
                 esg_available = False
 
             if not Company.query.filter_by(symbol=symbol, exchange_symbol=exchange_symbol, name=name).first():
-                print("Added", company)
+                print("Added ->", company)
 
                 db.session.add(
                     Company(
@@ -60,8 +65,11 @@ class Companies():
         result = requests.get(url, headers=headers)
         return result.text
 
-    def scrape_companies(self, url):
+    def scrape_sc_companies(self, url):
         """Parse stock symbols from a slickcharts url"""
+        print("#########################")
+        print("Scraping", url)
+        print("#########################")
         companies = []
         html = self.extract_html(url)
         doc = BeautifulSoup(html, "html.parser")
@@ -84,17 +92,58 @@ class Companies():
                 .string
             )
 
+            name = self.process_sc_name(name)
             company = self.get_company_data(symbol, name)
 
             if company:
+                print("Found company ->", symbol, name)
+                companies.append(company)
+
+        return companies
+
+    def scrape_tsx60(self):
+        """Parse information from wikipedia about TSX60 stocks"""
+        url = "https://en.wikipedia.org/wiki/S%26P/TSX_60"
+        print("#########################")
+        print("Scraping", url)
+        print("#########################")
+
+        companies = []
+        html = self.extract_html(url)
+        doc = BeautifulSoup(html, "html.parser")
+        table = doc.find("table")
+        tbody = table.find("tbody")
+        trs = tbody.find_all("tr")
+
+        for tr in trs:
+            tds = tr.find_all('td')
+
+            if not tds:
+                continue
+
+            symbol = (
+                tds[0]
+                .find("a")
+                .string
+            )
+            name = (
+                tds[1]
+                .find("a")
+                .string
+            )
+
+            company = self.get_company_data(symbol, name)
+
+            if company:
+                print("Found company ->", symbol, name)
                 companies.append(company)
 
         return companies
 
     def get_company_data(self, symbol, name):
         """Query Yahoo Finance API and return (symbol, exchange_symbol, name)"""
+
         symbol = symbol.upper()
-        name = self.process_name(name)
 
         resp = requests.get(
             "https://query1.finance.yahoo.com/v1/finance/search",
@@ -129,13 +178,14 @@ class Companies():
 
     def get_companies(self):
         """Get stock symbols for nasdaq s&p 500 and dowjones"""
-        nasdaq_100 = self.scrape_companies(self.nasdaq_url)
-        sp500 = self.scrape_companies(self.sp500_url)
-        dowjones = self.scrape_companies(self.dowjones_url)
+        nasdaq_100 = self.scrape_sc_companies(self.nasdaq_url)
+        sp500 = self.scrape_sc_companies(self.sp500_url)
+        dowjones = self.scrape_sc_companies(self.dowjones_url)
+        tsx60 = self.scrape_tsx60()
 
-        return list(set().union(nasdaq_100, sp500, dowjones))
+        return list(set().union(nasdaq_100, sp500, dowjones, tsx60))
 
-    def process_name(self, name):
+    def process_sc_name(self, name):
         """Remove unwanted parts from the company name"""
         strings = [
             "Class A",
