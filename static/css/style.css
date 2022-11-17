@@ -1,6 +1,7 @@
 .logo {
 	display: flex;
 	justify-content: center;
+	align-items: center;
 	width: 3.5rem;
 	height: 3.5rem;
 	border-radius: 50%;
@@ -11,4 +12,12 @@
 	object-fit: contain;
 	margin: auto;
 	width: 85%;
+}
+
+.table-inner {
+	height: 70px;
+}
+
+.esg-bubble {
+	border-radius: 50%;
 }

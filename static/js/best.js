@@ -1,4 +1,4 @@
-$companyList = $("#company-list");
+$companiesTable = $("#companies-table tbody");
 
 async function getBestCompanies() {
 	const resp = await axios.get("/api/companies/ranked/best/e");
@@ -6,35 +6,69 @@ async function getBestCompanies() {
 	return companies;
 }
 
-async function populateList() {
+async function getESGRanges() {
+	const resp = await axios.get("/api/esg/ranges");
+	const ranges = resp.data.ranges;
+	return ranges;
+}
+
+async function populateCompaniesTable() {
 	const companies = await getBestCompanies();
-	for (const company of companies) {
-		$listItem = makeListItem(company);
-		$companyList.append($listItem);
+	const esgRanges = await getESGRanges();
+	for (let i = 0; i < companies.length; i++) {
+		const company = companies[i];
+		const $tr = makeCompanyTr(i, company, esgRanges);
+		$companiesTable.append($tr);
 	}
 }
 
-function makeListItem(company) {
-	website = company.profile.website;
-	const $listItem = $(`<a href="${website}">`);
-	$listItem.addClass("list-group-item");
-	$listItem.addClass("list-group-item-action");
+function makeCompanyTr(idx, company, esgRanges) {
+	const $tr = $(`<tr>`);
 
-	$profile = makeProfileOverview(company.profile);
+	const $rank = makeRankTd(idx + 1);
+	const $profile = makeProfileTd(company.profile);
+	const $e = makeESGTd("environmental", company, esgRanges);
+	const $s = makeESGTd("social", company, esgRanges);
+	const $g = makeESGTd("governance", company, esgRanges);
+	const $t = makeESGTd("total", company, esgRanges);
 
-	$listItem.append($profile);
-	return $listItem;
+	$tr.append($rank);
+	$tr.append($profile);
+	$tr.append($e);
+	$tr.append($s);
+	$tr.append($g);
+	$tr.append($t);
+
+	return $tr;
 }
 
-function makeProfileOverview(profile) {
-	$profile = $("<div class='row'>");
-	$leftDiv = $("<div>");
-	$rightDiv = $("<div>");
-	$logo = makeLogo(profile.website);
-	$symbol = $("<div>");
-	$name = $("<div>");
+function makeRankTd(rank) {
+	const $td = $("<td>");
+	const $innerDiv = $("<div>");
+	const $span = $("<span>");
 
-	$profile.addClass("");
+	$innerDiv.addClass(
+		"table-inner d-flex justify-content-center align-items-center"
+	);
+
+	$span.text(rank);
+
+	$innerDiv.append($span);
+	$td.append($innerDiv);
+
+	return $td;
+}
+
+function makeProfileTd(profile) {
+	const $td = $("<td>");
+	const $innerDiv = $("<div>");
+	const $leftDiv = $("<div>");
+	const $rightDiv = $("<div>");
+	const $logo = makeLogo(profile);
+	const $symbol = $("<div>");
+	const $name = $("<div>");
+
+	$innerDiv.addClass("table-inner d-flex justify-content-start");
 	$leftDiv.addClass("px-2 d-flex flex-column justify-content-center");
 	$rightDiv.addClass("px-2 d-flex flex-column justify-content-center");
 	$symbol.addClass("h4");
@@ -46,28 +80,83 @@ function makeProfileOverview(profile) {
 	$rightDiv.append($symbol);
 	$rightDiv.append($name);
 
-	$profile.append($leftDiv);
-	$profile.append($rightDiv);
+	$innerDiv.append($leftDiv);
+	$innerDiv.append($rightDiv);
 
-	return $profile;
+	$td.append($innerDiv);
+
+	return $td;
 }
 
-function makeLogo(url) {
-	// Get domain
-	domain = new URL(url);
-	domain = domain.hostname.replace("www.", "");
-
+function makeLogo(profile) {
 	// Create the div
-	$div = $(`<div>`);
+	const $div = $(`<div>`);
 	$div.addClass("logo");
 
-	// Create the img
-	$img = $("<img>");
-	$img.attr("src", `https://logo.clearbit.com/${domain}`);
+	// Insert image if available
+	try {
+		let domain = new URL(profile.website);
+		domain = domain.hostname.replace("www.", "");
 
-	$div.append($img);
+		const $img = $("<img>");
+		$img.attr("src", `https://logo.clearbit.com/${domain}`);
+		$div.append($img);
+	} catch (error) {
+		console.log(error);
+		const $inner = $("<div class='text-muted'>");
+		$inner.text(profile.symbol[0]);
+		$div.append($inner);
+	}
 
 	return $div;
 }
 
-populateList();
+function makeESGTd(type, company, esgRanges) {
+	const $td = $("<td>");
+
+	type = type.toLowerCase();
+
+	const range = esgRanges[type];
+	if (!range) {
+		return $td;
+	}
+	const { min, max } = range;
+
+	const score = company.esg_ratings.scores[type + "_score"];
+	const size = `${parseInt(((score - min) / (max - min)) * 50) + 20}px`;
+	console.log(size);
+
+	// Make elements
+
+	const $innerDiv = $("<div>")
+		.addClass("table-inner d-flex justify-content-center align-items-center")
+		.appendTo($td);
+	const $esgBubble = $("<div>")
+		.addClass("esg-bubble d-flex align-items-center justify-content-center")
+		.css("height", size)
+		.css("width", size)
+		.appendTo($innerDiv);
+	const $esgText = $("<span>")
+		.addClass("text-white")
+		.text(score)
+		.appendTo($esgBubble);
+
+	switch (type) {
+		case "environmental":
+			$esgBubble.addClass("bg-success");
+			break;
+		case "social":
+			$esgBubble.addClass("bg-warning");
+			break;
+		case "governance":
+			$esgBubble.addClass("bg-danger");
+			break;
+		case "total":
+			$esgBubble.addClass("bg-primary");
+			break;
+	}
+
+	return $td;
+}
+
+populateCompaniesTable();
