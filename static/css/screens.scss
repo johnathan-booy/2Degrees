@@ -1,0 +1,20 @@
+$tablet: 768px;
+$laptop: 992px;
+$desktop: 1200px;
+
+@media only screen and (min-width: $tablet) {
+	.hide-sm {
+		display: contents;
+	}
+	.hide-lg {
+		display: none;
+	}
+}
+@media only screen and (max-width: $tablet) {
+	.hide-sm {
+		display: none;
+	}
+	.hide-lg {
+		display: contents;
+	}
+}

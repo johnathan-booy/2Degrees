@@ -1,3 +1,4 @@
+from urllib.parse import urlparse
 from database import db
 
 
@@ -106,6 +107,16 @@ class Company(db.Model):
     total_grade = db.Column(
         db.String()
     )
+
+    @property
+    def logo_url(self):
+        """Parse website and create logo url via Clearbit"""
+        if not self.website:
+            return
+
+        domain = urlparse(self.website).netloc.replace("www.", "")
+
+        return f"https://logo.clearbit.com/{domain}"
 
     @classmethod
     def ranked(cls, type: str, count: int, offset: int, ranking: str) -> list:

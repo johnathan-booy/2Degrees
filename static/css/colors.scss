@@ -1,0 +1,54 @@
+// SHADES and TINTS
+$s4: 30%;
+$s3: 25%;
+$s2: 12%;
+$s1: 6.25%;
+$t1: 18%;
+$t2: 33%;
+$t3: 44%;
+$t4: 52%;
+
+// COLORS
+$success: #528e75;
+$danger: #b94f3c;
+$accent: #41418b;
+$neutral: #8e7b7b;
+
+$success-s4: darken($success, $s4);
+$success-s3: darken($success, $s3);
+$success-s2: darken($success, $s2);
+$success-s1: darken($success, $s1);
+$success-t1: lighten($success, $t1);
+$success-t2: lighten($success, $t2);
+$success-t3: lighten($success, $t3);
+$success-t4: lighten($success, $t4);
+
+$danger-s4: darken($danger, $s4);
+$danger-s3: darken($danger, $s3);
+$danger-s2: darken($danger, $s2);
+$danger-s1: darken($danger, $s1);
+$danger-t1: lighten($danger, $t1);
+$danger-t2: lighten($danger, $t2);
+$danger-t3: lighten($danger, $t3);
+$danger-t4: lighten($danger, $t4);
+
+$neutral-s4: darken($neutral, $s4);
+$neutral-s3: darken($neutral, $s3);
+$neutral-s2: darken($neutral, $s2);
+$neutral-s1: darken($neutral, $s1);
+$neutral-t1: lighten($neutral, $t1);
+$neutral-t2: lighten($neutral, $t2);
+$neutral-t3: lighten($neutral, $t3);
+$neutral-t4: lighten($neutral, $t4);
+
+$accent-s4: darken($accent, $s4);
+$accent-s3: darken($accent, $s3);
+$accent-s2: darken($accent, $s2);
+$accent-s1: darken($accent, $s1);
+$accent-t1: lighten($accent, $t1);
+$accent-t2: lighten($accent, $t2);
+$accent-t3: lighten($accent, $t3);
+$accent-t4: lighten($accent, $t4);
+
+// ASSIGNED
+$light-text: $neutral-t4;

@@ -1,23 +1,274 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Ropa+Sans&family=Titillium+Web&display=swap");
+@media only screen and (min-width: 768px) {
+  .hide-sm {
+    display: contents;
+  }
+  .hide-lg {
+    display: none;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .hide-sm {
+    display: none;
+  }
+  .hide-lg {
+    display: contents;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: #f5f4f4;
+  margin: 0px;
+  padding: 0px;
+}
+
+.container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+body,
+input,
+textarea,
+button {
+  font-family: "Titillium Web", sans-serif;
+  font-size: 1rem;
+  color: #4a3f3f;
+}
+
+h1,
+.h1 {
+  font-family: "Poppins", sans-serif;
+  font-size: 3.5rem;
+}
+
+h2,
+.h2 {
+  font-family: "Poppins", sans-serif;
+  font-size: 2.5rem;
+}
+
+h3,
+.h3 {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.8rem;
+}
+
+h4,
+.h4 {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.5rem;
+}
+
+h5,
+.h5 {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+}
+
+h6,
+.h6 {
+  font-family: "Ropa Sans", sans-serif;
+  font-size: 1.2rem;
+}
+
+small,
+.small {
+  font-size: 0.7rem;
+}
+
+.btn-sm {
+  border-radius: 0.5em;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.5rem;
+  margin: 0.1rem;
+}
+
+.btn {
+  border-radius: 0.5em;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  padding: 0.3em 1.2em;
+  margin: 0.3em 0.15rem;
+}
+
+.btn-label {
+  border-radius: 0.5em;
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin: 0.3em 0.15rem;
+}
+
+.btn-neutral {
+  color: white;
+  background: #b8acac;
+}
+
+.btn-neutral:hover {
+  background: #8e7b7b;
+}
+
+.btn-accent {
+  color: white;
+  background: #6d6dbb;
+}
+
+.btn-accent:hover {
+  background: #41418b;
+}
+
+.pb-1 {
+  padding-bottom: 0.25rem !important;
+}
+
+.pb-2 {
+  padding-bottom: 0.5rem !important;
+}
+
+.pb-3 {
+  padding-bottom: 1rem !important;
+}
+
+.pb-4 {
+  padding-bottom: 1.5rem !important;
+}
+
+.pb-5 {
+  padding-bottom: 3rem !important;
+}
+
 .logo {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 3.5rem;
-	height: 3.5rem;
-	border-radius: 50%;
-	outline: 0.06rem solid rgb(181, 181, 181);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  box-shadow: #dcd6d6 0px 2px 8px 0px;
+  overflow: hidden;
+  background: white;
 }
-
 .logo img {
-	object-fit: contain;
-	margin: auto;
-	width: 85%;
+  object-fit: contain;
+  margin: auto;
+  width: 85%;
 }
 
-.table-inner {
-	height: 70px;
+@media (min-width: 768px) {
+  .logo {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+.company-list {
+  width: 100%;
+  border-radius: 10px;
+  background: white;
+  box-shadow: #dcd6d6 0px 4px 16px 0px;
+}
+.company-list .row-link:hover {
+  background: #f5f4f4;
+}
+.company-list .row-link {
+  cursor: pointer;
+}
+.company-list .row {
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #f5f4f4;
+  border: none;
+  background: transparent;
+  text-decoration: none;
+  color: #4a3f3f;
+}
+.company-list .row .list-header {
+  height: 60px;
+}
+.company-list .row .list-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 80px;
+}
+.company-list .row .list-item .col-center {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 5px;
+  align-items: center;
+}
+.company-list .row .list-item .col-start {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 5px;
+  align-items: start;
+}
+.company-list .row .list-item .col-end {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 5px;
+  align-items: end;
+}
+.company-list .row .list-item .col-padding {
+  flex-basis: 30px;
+  flex-grow: 1.5;
+  flex-shrink: 1;
+}
+.company-list .row .list-item .col-sm {
+  flex-basis: 50px;
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+.company-list .row .list-item .col-md {
+  flex-basis: 150px;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.company-list .row .list-item .col-lg {
+  flex-basis: 200px;
+  flex-grow: 1;
+  flex-shrink: 0.75;
 }
 
 .esg-bubble {
-	border-radius: 50%;
+  border-radius: 50%;
 }
+
+/*# sourceMappingURL=style.css.map */

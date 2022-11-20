@@ -27,13 +27,24 @@ connect_db(app)
 @ app.route('/')
 def homepage():
     """Show homepage"""
-    return redirect('/companies/best')
+    return redirect('/companies/best/e')
 
 
-@app.route("/companies/best")
-def list_top_companies():
-    """List the best companies. Default order is environmental"""
-    return render_template("best.html")
+@app.route("/companies/<ranking>/<type>")
+def list_top_companies(ranking, type):
+    """List the best or worst companies, ranked by ESG or Total scores."""
+
+    type = type.upper()
+    ranking = ranking.lower()
+
+    if ranking not in ["best", "worst"]:
+        return redirect("/companies/best/e")
+
+    if type not in "ESGT" or len(type) != 1:
+        return redirect("/companies/best/e")
+
+    companies = Company.ranked(type, count=20, offset=0, ranking=ranking)
+    return render_template("ranked.html", companies=companies, ranking=ranking, type=type)
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])

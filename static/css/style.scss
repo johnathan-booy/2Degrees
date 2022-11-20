@@ -1,0 +1,118 @@
+@use "base";
+@use "colors";
+@use "fonts";
+@use "screens";
+@use "buttons";
+@use "spacers";
+
+.logo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	box-shadow: colors.$neutral-t2 0px 2px 8px 0px;
+	overflow: hidden;
+	background: colors.$neutral-t4;
+
+	img {
+		object-fit: contain;
+		margin: auto;
+		width: 85%;
+	}
+}
+
+@media (min-width: screens.$tablet) {
+	.logo {
+		width: 4rem;
+		height: 4rem;
+	}
+}
+
+.company-list {
+	width: 100%;
+	border-radius: 10px;
+	background: colors.$neutral-t4;
+	box-shadow: colors.$neutral-t2 0px 4px 16px 0px;
+
+	.row-link:hover {
+		background: colors.$neutral-t3;
+	}
+
+	.row-link {
+		cursor: pointer;
+	}
+
+	.row {
+		display: block;
+		width: 100%;
+		border-bottom: 1px solid colors.$neutral-t3;
+		border: none;
+		background: transparent;
+		text-decoration: none;
+		color: colors.$neutral-s3;
+
+		.list-header {
+			height: 60px;
+		}
+
+		.list-item {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			width: 100%;
+			min-height: 80px;
+
+			@mixin col {
+				display: flex;
+				justify-content: center;
+				flex-direction: column;
+				padding: 5px;
+			}
+
+			.col-center {
+				@include col;
+				align-items: center;
+			}
+
+			.col-start {
+				@include col;
+				align-items: start;
+			}
+
+			.col-end {
+				@include col;
+				align-items: end;
+			}
+
+			.col-padding {
+				flex-basis: 30px;
+				flex-grow: 1.5;
+				flex-shrink: 1;
+			}
+
+			.col-sm {
+				flex-basis: 50px;
+				flex-grow: 0;
+				flex-shrink: 1;
+			}
+			.col-md {
+				flex-basis: 150px;
+				flex-grow: 1;
+				flex-shrink: 1;
+			}
+			.col-lg {
+				flex-basis: 200px;
+				flex-grow: 1;
+				flex-shrink: 0.75;
+			}
+		}
+	}
+}
+
+.esg-bubble {
+	border-radius: 50%;
+	// background: base.$primary;
+}

@@ -1,0 +1,92 @@
+@use "colors";
+@use "fonts";
+@use "screens";
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background: colors.$neutral-t3;
+	margin: 0px;
+	padding: 0px;
+}
+
+.container {
+	margin-right: auto;
+	margin-left: auto;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+@media (min-width: screens.$tablet) {
+	.container {
+		width: 750px;
+	}
+}
+@media (min-width: screens.$laptop) {
+	.container {
+		width: 970px;
+	}
+}
+@media (min-width: screens.$desktop) {
+	.container {
+		width: 1170px;
+	}
+}
+
+.center {
+	display: flex;
+	justify-content: center;
+}
+
+// FONTS
+body,
+input,
+textarea,
+button {
+	font-family: fonts.$general;
+	font-size: 1rem;
+	color: colors.$neutral-s3;
+}
+
+h1,
+.h1 {
+	font-family: fonts.$title;
+	font-size: 3.5rem;
+}
+
+h2,
+.h2 {
+	font-family: fonts.$title;
+	font-size: 2.5rem;
+}
+
+h3,
+.h3 {
+	font-family: fonts.$subtitle;
+	font-size: 1.8rem;
+}
+
+h4,
+.h4 {
+	font-family: fonts.$subtitle;
+	font-size: 1.5rem;
+}
+
+h5,
+.h5 {
+	font-family: fonts.$subtitle;
+	font-size: 1.2rem;
+}
+
+h6,
+.h6 {
+	font-family: fonts.$subtitle;
+	font-size: 1.2rem;
+}
+
+small,
+.small {
+	font-size: 0.7rem;
+}

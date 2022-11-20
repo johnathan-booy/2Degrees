@@ -1,0 +1,42 @@
+@use "colors";
+
+@mixin button {
+	border-radius: 0.5em;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	transition: all 0.2s;
+}
+
+.btn-sm {
+	@include button;
+	font-size: 0.7rem;
+	padding: 0.1rem 0.5rem;
+	margin: 0.1rem;
+}
+
+.btn {
+	@include button;
+	padding: 0.3em 1.2em;
+	margin: 0.3em 0.15rem;
+}
+
+.btn-label {
+	@include button;
+	margin: 0.3em 0.15rem;
+}
+.btn-neutral {
+	color: colors.$light-text;
+	background: colors.$neutral-t1;
+}
+.btn-neutral:hover {
+	background: colors.$neutral;
+}
+
+.btn-accent {
+	color: colors.$light-text;
+	background: colors.$accent-t1;
+}
+.btn-accent:hover {
+	background: colors.$accent;
+}
