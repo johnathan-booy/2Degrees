@@ -1,4 +1,6 @@
 from flask import Flask, render_template, redirect, jsonify, request
+from sqlalchemy import func, within_group, select
+from sqlalchemy.orm import Session
 from database import db, connect_db
 from exceptions import APIError, APINotFoundError, APIInvalidError
 from models.company import Company
@@ -9,6 +11,7 @@ from models.country import Country
 from models.sector import Sector
 from models.user import User
 from models.users_companies import users_companies
+from models.distribution import Distribution
 
 
 app = Flask(__name__)
@@ -43,7 +46,7 @@ def list_top_companies(ranking, type):
     if type not in "ESGT" or len(type) != 1:
         return redirect("/companies/best/e")
 
-    companies = Company.ranked(type, count=20, offset=0, ranking=ranking)
+    companies = Company.ranked(type, count=10, offset=0, ranking=ranking)
     return render_template("ranked.html", companies=companies, ranking=ranking, type=type)
 
 
@@ -99,7 +102,14 @@ def get_esg_ranges():
     return jsonify({"ranges": ranges})
 
 
-@app.errorhandler(APIError)
+@app.route('/api/esg/distributions')
+def get_esg_distributions():
+    """Get the top and bottom percentile divides for all types (E, S, G and T)"""
+    distributions = Distribution.serialize()
+    return jsonify({"distributions": distributions})
+
+
+@ app.errorhandler(APIError)
 def handle_exception(err):
     """Return custom JSON when APIError or its children are raised"""
     response = {"error": err.description, "message": ""}

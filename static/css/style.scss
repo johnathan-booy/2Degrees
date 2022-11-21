@@ -5,16 +5,34 @@
 @use "buttons";
 @use "spacers";
 
-.logo {
+@mixin flex-circle($mobile-size, $tablet-size, $laptop-size, $desktop-size) {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 3rem;
-	height: 3rem;
 	border-radius: 50%;
-	box-shadow: colors.$neutral-t2 0px 2px 8px 0px;
 	overflow: hidden;
+	box-shadow: colors.$neutral-t2 0px 2px 8px 0px;
 	background: colors.$neutral-t4;
+
+	// Dimensions
+	width: $mobile-size;
+	height: $mobile-size;
+	@media (min-width: screens.$tablet) {
+		width: $tablet-size;
+		height: $tablet-size;
+	}
+	@media (min-width: screens.$laptop) {
+		width: $laptop-size;
+		height: $laptop-size;
+	}
+	@media (min-width: screens.$desktop) {
+		width: $desktop-size;
+		height: $desktop-size;
+	}
+}
+
+.logo {
+	@include flex-circle(2.5rem, 3.5rem, 4rem, 4.5rem);
 
 	img {
 		object-fit: contain;
@@ -25,8 +43,20 @@
 
 @media (min-width: screens.$tablet) {
 	.logo {
+		width: 3.5rem;
+		height: 3.5rem;
+	}
+}
+@media (min-width: screens.$laptop) {
+	.logo {
 		width: 4rem;
 		height: 4rem;
+	}
+}
+@media (min-width: screens.$desktop) {
+	.logo {
+		width: 4.5rem;
+		height: 4.5rem;
 	}
 }
 
@@ -108,11 +138,16 @@
 				flex-grow: 1;
 				flex-shrink: 0.75;
 			}
+
+			.high-score {
+				@include flex-circle(2.3rem, 2.8rem, 3.1rem, 3.5rem);
+				background-color: colors.$success-t2 !important;
+			}
+
+			.low-score {
+				@include flex-circle(2.3rem, 2.8rem, 3.1rem, 3.5rem);
+				background-color: colors.$danger-t2 !important;
+			}
 		}
 	}
-}
-
-.esg-bubble {
-	border-radius: 50%;
-	// background: base.$primary;
 }

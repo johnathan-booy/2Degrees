@@ -27,7 +27,7 @@
     </a>
 </div>
 
-<div class="company-list">
+<div class="company-list mb-5">
     <div class="row">
         <div class="list-item list-header">
             <!-- PADDING -->
@@ -67,54 +67,44 @@
     {% for company in companies %}
     <a class="row row-link" href="{{company.website}}">
         <div class="list-item">
+
+            <!-- PADDING -->
             <div class="col-padding"></div>
+
             <!-- RANK -->
             <div class="col-center col-sm">
                 <span>{{loop.index}}</span>
             </div>
+
             <!-- LOGO -->
             <div class="col-center col-md">
                 <div class="logo">
                     <img src="{{company.logo_url}}" alt="{{company.name}} Logo">
                 </div>
             </div>
+
             <!-- COMPANY -->
             <div class="col-start col-lg">
                 <div class="h4">{{company.symbol}}</div>
                 <div class="small">{{company.name}}</div>
             </div>
-            <!-- ENVIRONMENTAL -->
+
+            <!-- ESG SCORES -->
+            {% macro esg_scores(type, score) %}
             <div class="col-center col-md">
-                <div class="esg-bubble esg-bubble-environmental">
-                    <span class="text-white">
-                        {{company.environmental_score}}
-                    </span>
+                <div class="{{type}}" data-score="{{score}}">
+                    {{score}}
                 </div>
             </div>
-            <!-- SOCIAL -->
-            <div class="col-center col-md">
-                <div class="esg-bubble esg-bubble-social">
-                    <span class="text-white">
-                        {{company.social_score}}
-                    </span>
-                </div>
-            </div>
-            <!-- GOVERNANCE -->
-            <div class="col-center col-md">
-                <div class="esg-bubble esg-bubble-governance">
-                    <span class="text-white">
-                        {{company.governance_score}}
-                    </span>
-                </div>
-            </div>
-            <!-- TOTAL -->
-            <div class="col-center col-md">
-                <div class="esg-bubble esg-bubble-total">
-                    <span class="text-white">
-                        {{company.total_score}}
-                    </span>
-                </div>
-            </div>
+            {% endmacro %}
+
+            {{esg_scores("environmental", company.environmental_score)}}
+            {{esg_scores("social", company.social_score)}}
+            {{esg_scores("governance", company.governance_score)}}
+            {{esg_scores("total", company.total_score)}}
+
+
+            <!-- PADDING -->
             <div class="col-padding"></div>
         </div>
 
@@ -122,8 +112,4 @@
     {% endfor %}
 </div>
 
-{% endblock %}
-
-{% block script %}
-<!-- <script src="/static/js/best.js"></script> -->
 {% endblock %}
