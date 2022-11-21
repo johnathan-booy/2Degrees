@@ -187,6 +187,10 @@ class Company(db.Model):
 
         return ranges
 
+    @classmethod
+    def num_of_rated(cls) -> int:
+        return cls.query.filter(cls.total_score != None).count()
+
     def serialize(self) -> dict:
         """Return a dict representation of Company"""
         location = {

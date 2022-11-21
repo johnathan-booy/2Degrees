@@ -1,3 +1,4 @@
+from math import ceil
 from flask import Flask, render_template, redirect, jsonify, request
 from sqlalchemy import func, within_group, select
 from sqlalchemy.orm import Session
@@ -46,8 +47,17 @@ def list_top_companies(ranking, type):
     if type not in "ESGT" or len(type) != 1:
         return redirect("/companies/best/e")
 
-    companies = Company.ranked(type, count=10, offset=0, ranking=ranking)
-    return render_template("ranked.html", companies=companies, ranking=ranking, type=type)
+    count = 10
+    page = int(request.args.get("page", 0))
+    offset = page * count
+    href = f"/companies/{ranking}/{type}"
+
+    companies = Company.ranked(
+        type, count=count, offset=offset, ranking=ranking)
+
+    page_count = ceil(Company.num_of_rated() / count)
+
+    return render_template("ranked.html", companies=companies, ranking=ranking, type=type, page=page, page_count=page_count, offset=offset, href=href)
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])
@@ -63,7 +73,7 @@ def get_companies(symbol):
     return jsonify({"companies": data})
 
 
-@app.route('/api/companies/ranked/<ranking>/<type>', methods=['GET'])
+@ app.route('/api/companies/ranked/<ranking>/<type>', methods=['GET'])
 def get_best_companies(ranking, type):
     """Get the best companies based on Environmental, Social, Governance or Total scores"""
 
@@ -95,14 +105,14 @@ def get_best_companies(ranking, type):
     return jsonify({"companies": data})
 
 
-@app.route('/api/esg/ranges')
+@ app.route('/api/esg/ranges')
 def get_esg_ranges():
     """Get the highest and lowest scores for each category (E, S, G and T)"""
     ranges = Company.esg_ranges()
     return jsonify({"ranges": ranges})
 
 
-@app.route('/api/esg/distributions')
+@ app.route('/api/esg/distributions')
 def get_esg_distributions():
     """Get the top and bottom percentile divides for all types (E, S, G and T)"""
     distributions = Distribution.serialize()

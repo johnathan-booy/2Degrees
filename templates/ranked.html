@@ -7,7 +7,7 @@
 {% block content %}
 
 <h2 class="display-4">Companies</h2>
-<div class="container pb-3">
+<div class="container mb-3">
     <div class="btn-label">Ranked by:</div>
     <a href="/companies/best/{{type}}" class="btn 
     {% if ranking.lower() == 'best' %}
@@ -28,6 +28,7 @@
 </div>
 
 <div class="company-list mb-5">
+
     <div class="row">
         <div class="list-item list-header">
             <!-- PADDING -->
@@ -64,6 +65,7 @@
             <div class="col-padding"></div>
         </div>
     </div>
+
     {% for company in companies %}
     <a class="row row-link" href="{{company.website}}">
         <div class="list-item">
@@ -73,7 +75,7 @@
 
             <!-- RANK -->
             <div class="col-center col-sm">
-                <span>{{loop.index}}</span>
+                <span>{{loop.index + offset}}</span>
             </div>
 
             <!-- LOGO -->
@@ -107,9 +109,24 @@
             <!-- PADDING -->
             <div class="col-padding"></div>
         </div>
-
     </a>
     {% endfor %}
+
+    <div class="row">
+        <div class="list-item">
+
+            {% if page > 0 %}
+            <a href="{{href}}?page={{page-1}}" class="btn btn-neutral"><i class="fa-solid fa-arrow-left"></i></a>
+            {% endif %}
+
+            <div class="btn-label">Page {{page + 1}} of {{page_count}}</div>
+
+            {% if page + 1 < page_count %} <a href="{{href}}?page={{page+1}}" class="btn btn-neutral"><i
+                    class="fa-solid fa-arrow-right"></i></a>
+                {% endif %}
+
+        </div>
+    </div>
 </div>
 
 {% endblock %}
