@@ -4,19 +4,23 @@
 @use "screens";
 @use "buttons";
 @use "spacers";
+@use "positions";
 
-@mixin flex-circle($mobile-size, $tablet-size, $laptop-size, $desktop-size) {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+@mixin circle($size) {
 	border-radius: 50%;
 	overflow: hidden;
 	box-shadow: colors.$neutral-t2 0px 2px 8px 0px;
+	width: $size;
+	height: $size;
+}
+
+@mixin flex-circle($mobile-size, $tablet-size, $laptop-size, $desktop-size) {
+	@include circle($mobile-size);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	background: colors.$neutral-t4;
 
-	// Dimensions
-	width: $mobile-size;
-	height: $mobile-size;
 	@media (min-width: screens.$tablet) {
 		width: $tablet-size;
 		height: $tablet-size;
@@ -41,37 +45,17 @@
 	}
 }
 
-@media (min-width: screens.$tablet) {
-	.logo {
-		width: 3.5rem;
-		height: 3.5rem;
-	}
-}
-@media (min-width: screens.$laptop) {
-	.logo {
-		width: 4rem;
-		height: 4rem;
-	}
-}
-@media (min-width: screens.$desktop) {
-	.logo {
-		width: 4.5rem;
-		height: 4.5rem;
-	}
-}
-
 .company-list {
 	width: 100%;
 	border-radius: 10px;
 	background: colors.$neutral-t4;
 	box-shadow: colors.$neutral-t2 0px 4px 16px 0px;
 
-	.row-link:hover {
-		background: colors.$neutral-t3;
-	}
-
 	.row-link {
 		cursor: pointer;
+	}
+	.row-link:hover {
+		background: colors.$neutral-t3;
 	}
 
 	.row {
@@ -95,28 +79,6 @@
 			width: 100%;
 			min-height: 80px;
 
-			@mixin col {
-				display: flex;
-				justify-content: center;
-				flex-direction: column;
-				padding: 5px;
-			}
-
-			.col-center {
-				@include col;
-				align-items: center;
-			}
-
-			.col-start {
-				@include col;
-				align-items: start;
-			}
-
-			.col-end {
-				@include col;
-				align-items: end;
-			}
-
 			.col-padding {
 				flex-basis: 30px;
 				flex-grow: 1.5;
@@ -138,15 +100,29 @@
 				flex-grow: 1;
 				flex-shrink: 0.75;
 			}
+			.col-combined {
+				flex-basis: 400px;
+				flex-grow: 1.2;
+				flex-shrink: 0.82;
+			}
 
-			.high-score {
+			.best {
 				@include flex-circle(2.3rem, 2.8rem, 3.1rem, 3.5rem);
 				background-color: colors.$success-t2 !important;
 			}
 
-			.low-score {
+			.worst {
 				@include flex-circle(2.3rem, 2.8rem, 3.1rem, 3.5rem);
 				background-color: colors.$danger-t2 !important;
+			}
+
+			.key-best {
+				@include circle(1rem);
+				background-color: colors.$success-t2;
+			}
+			.key-worst {
+				@include circle(1rem);
+				background-color: colors.$danger-t2;
 			}
 		}
 	}

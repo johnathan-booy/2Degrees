@@ -7,7 +7,7 @@
 {% block content %}
 
 <h2 class="display-4">Companies</h2>
-<div class="container mb-3">
+<div class="container mb-2">
     <div class="btn-label">Ranked by:</div>
     <a href="/companies/best/{{type}}" class="btn 
     {% if ranking.lower() == 'best' %}
@@ -33,12 +33,19 @@
         <div class="list-item list-header">
             <!-- PADDING -->
             <div class="col-padding"></div>
-            <div class="col-sm"></div>
-            <div class="col-md"></div>
-            <div class="col-lg"></div>
+            <div class="col-combined flex-row-center">
+                <div class="flex-col-center pt-5">
+                    <div class="key-best"></div>
+                    <div class="small">Best 10%</div>
+                </div>
+                <div class="flex-col-center pt-5">
+                    <div class="key-worst"></div>
+                    <div class="small">Worst 10%</div>
+                </div>
+            </div>
 
             {% macro esg_header(letter, name)%}
-            <div class="col-center col-md">
+            <div class="flex-col-center col-md">
                 <span class="hide-sm">
                     {{name}}
                 </span>
@@ -74,26 +81,26 @@
             <div class="col-padding"></div>
 
             <!-- RANK -->
-            <div class="col-center col-sm">
+            <div class="flex-col-center col-sm">
                 <span>{{loop.index + offset}}</span>
             </div>
 
             <!-- LOGO -->
-            <div class="col-center col-md">
+            <div class="flex-col-center col-md">
                 <div class="logo">
                     <img src="{{company.logo_url}}" alt="{{company.name}} Logo">
                 </div>
             </div>
 
             <!-- COMPANY -->
-            <div class="col-start col-lg">
+            <div class="flex-col-start col-lg">
                 <div class="h4">{{company.symbol}}</div>
                 <div class="small">{{company.name}}</div>
             </div>
 
             <!-- ESG SCORES -->
             {% macro esg_scores(type, score) %}
-            <div class="col-center col-md">
+            <div class="flex-col-center col-md">
                 <div class="{{type}}" data-score="{{score}}">
                     {{score}}
                 </div>

@@ -24,9 +24,9 @@ function addHighlights($divs, distribution) {
 	for (const $div of $divs) {
 		const score = $div.dataset.score;
 		if (score >= distribution.top) {
-			$div.classList.add("high-score");
+			$div.classList.add("best");
 		} else if (score <= distribution.bottom) {
-			$div.classList.add("low-score");
+			$div.classList.add("worst");
 		}
 	}
 }

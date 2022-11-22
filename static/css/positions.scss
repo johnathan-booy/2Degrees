@@ -1,0 +1,41 @@
+@mixin flex-col {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	padding: 5px;
+}
+
+.flex-col-center {
+	@include flex-col;
+	align-items: center;
+}
+
+.flex-col-start {
+	@include flex-col;
+	align-items: start;
+}
+
+.flex-col-end {
+	@include flex-col;
+	align-items: end;
+}
+@mixin flex-row {
+	display: flex;
+	justify-content: center;
+	flex-direction: row;
+	padding: 5px;
+}
+.flex-row-center {
+	@include flex-row;
+	align-items: center;
+}
+
+.flex-row-start {
+	@include flex-row;
+	align-items: start;
+}
+
+.flex-row-end {
+	@include flex-row;
+	align-items: end;
+}
