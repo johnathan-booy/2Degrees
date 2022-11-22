@@ -7,34 +7,36 @@ class Distribution(db.Model):
     __tablename__ = "distributions"
 
     name = db.Column(db.String(), primary_key=True)
-    bottom = db.Column(db.Integer)
-    top = db.Column(db.Integer)
+    environmental_best = db.Column(db.Integer)
+    environmental_worst = db.Column(db.Integer)
+    social_best = db.Column(db.Integer)
+    social_worst = db.Column(db.Integer)
+    governance_best = db.Column(db.Integer)
+    governance_worst = db.Column(db.Integer)
+    total_best = db.Column(db.Integer)
+    total_worst = db.Column(db.Integer)
 
     @classmethod
-    def serialize(cls) -> dict:
+    def serialize(cls, name) -> dict:
         """Return a serialized object with top and bottom percentile divides for given type (E,S,G or T)"""
-        e = cls.query.get("environmental")
-        s = cls.query.get("social")
-        g = cls.query.get("governance")
-        t = cls.query.get("total")
+        d = cls.query.filter_by(name=name).first()
 
         serialized = {
             "environmental": {
-                "top": e.top,
-                "bottom": e.bottom
+                "best": d.environmental_best,
+                "worst": d.environmental_worst
             },
             "social": {
-                "top": s.top,
-                "bottom": s.bottom
+                "best": d.social_best,
+                "worst": d.social_worst
             },
             "governance": {
-                "top": g.top,
-                "bottom": g.bottom
+                "best": d.governance_best,
+                "worst": d.governance_worst
             },
             "total": {
-                "top": t.top,
-                "bottom": t.bottom
+                "best": d.total_best,
+                "worst": d.total_worst
             }
         }
-
         return serialized

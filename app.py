@@ -35,7 +35,7 @@ def homepage():
 
 
 @app.route("/companies/<ranking>/<type>")
-def list_top_companies(ranking, type):
+def list_companies(ranking, type):
     """List the best or worst companies, ranked by ESG or Total scores."""
 
     type = type.upper()
@@ -55,9 +55,46 @@ def list_top_companies(ranking, type):
     companies = Company.ranked(
         type, count=count, offset=offset, ranking=ranking)
 
+    distributions = Distribution.query.filter_by(name="companies").first()
+
     page_count = ceil(Company.num_of_rated() / count)
 
-    return render_template("ranked.html", companies=companies, ranking=ranking, type=type, page=page, page_count=page_count, offset=offset, href=href)
+    return render_template("companies.html",
+                           companies=companies,
+                           distributions=distributions,
+                           ranking=ranking,
+                           type=type,
+                           page=page,
+                           page_count=page_count,
+                           offset=offset,
+                           href=href)
+
+
+@app.route("/sectors/<ranking>/<type>")
+def list_sectors(ranking, type):
+    """List the best or worst sectors, ranked by ESG or Total scores."""
+
+    type = type.upper()
+    ranking = ranking.lower()
+
+    if ranking not in ["best", "worst"]:
+        return redirect("/sectors/best/e")
+
+    if type not in "ESGT" or len(type) != 1:
+        return redirect("/sectors/best/e")
+
+    href = f"/sectors/{ranking}/{type}"
+
+    sectors = Sector.ranked(type, ranking)
+
+    distributions = Distribution.query.filter_by(name="sectors").first()
+
+    return render_template("sectors.html",
+                           sectors=sectors,
+                           distributions=distributions,
+                           ranking=ranking,
+                           type=type,
+                           href=href)
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])
@@ -112,10 +149,10 @@ def get_esg_ranges():
     return jsonify({"ranges": ranges})
 
 
-@ app.route('/api/esg/distributions')
-def get_esg_distributions():
+@ app.route('/api/esg/distributions/<name>')
+def get_esg_distributions(name):
     """Get the top and bottom percentile divides for all types (E, S, G and T)"""
-    distributions = Distribution.serialize()
+    distributions = Distribution.serialize(name)
     return jsonify({"distributions": distributions})
 
 

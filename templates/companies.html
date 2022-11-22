@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}
+<title>Companies | 2Degrees Investing</title>
+{% endblock %}
+
+
+{% block content %}
+
+<h2 class="display-4">Companies</h2>
+<div class="container mb-2">
+    <div class="btn-label">Ranked by:</div>
+    <a href="/companies/best/{{type}}" class="btn 
+            {% if ranking.lower() == 'best' %}
+                btn-accent
+            {% else %}
+                btn-neutral
+            {% endif %}">
+        Best
+    </a>
+    <a href="/companies/worst/{{type}}" class="btn 
+            {% if ranking.lower() == 'worst' %}
+                btn-accent
+            {% else %}
+                btn-neutral
+            {% endif %}">
+        Worst
+    </a>
+</div>
+<div class="list mb-5">
+    <div class="row">
+        <div class="list-item list-header">
+            <!-- PADDING -->
+            <div class="col-padding"></div>
+            <!-- TABLE KEYS -->
+            <div class="col-combined flex-row-center">
+                <div class="flex-col-center pt-5">
+                    <div class="key-best"></div>
+                    <div class="small">Best 10%</div>
+                </div>
+                <div class="flex-col-center pt-5">
+                    <div class="key-worst"></div>
+                    <div class="small">Worst 10%</div>
+                </div>
+            </div>
+            <!-- ESG RATINGS -->
+            {% macro esg_header(letter, name)%}
+            <div class="flex-col-center col-md">
+                <span class="hide-sm">
+                    {{name}}
+                </span>
+                <span class="hide-lg">
+                    {{letter}}
+                </span>
+                <a class='btn-sm 
+                {% if type.upper() == letter %}
+                btn-accent
+                {% else %}
+                btn-neutral
+                {% endif %}' href="/companies/{{ranking}}/{{letter.lower()}}">
+                    <i class="fa-solid fa-sort"></i>
+                </a>
+            </div>
+            {% endmacro%}
+            {{ esg_header(letter="E", name="Environmental")}}
+            {{ esg_header(letter="S", name="Social")}}
+            {{ esg_header(letter="G", name="Governance")}}
+            {{ esg_header(letter="T", name="Total")}}
+
+            <!--PADDING -->
+            <div class="col-padding"></div>
+        </div>
+    </div>
+
+    {% for company in companies %}
+    <a class="row row-link" href="{{company.website}}">
+        <div class="list-item">
+
+            <!-- PADDING -->
+            <div class="col-padding"></div>
+
+            <!-- RANK -->
+            <div class="flex-col-center col-sm">
+                <span>{{loop.index + offset}}</span>
+            </div>
+
+            <!-- LOGO -->
+            <div class="flex-col-center col-md">
+                <div class="logo">
+                    <img src="{{company.logo_url}}" alt="{{company.name}} Logo">
+                </div>
+            </div>
+
+            <!-- COMPANY -->
+            <div class="flex-col-start col-lg">
+                <div class="h4">{{company.symbol}}</div>
+                <div class="small">{{company.name}}</div>
+            </div>
+
+            <!-- ESG SCORES -->
+            {% macro esg_scores(type, score) %}
+            <div class="flex-col-center col-md">
+                <div class="{{type}}" data-score="{{score}}">
+                    {{score}}
+                </div>
+            </div>
+            {% endmacro %}
+
+            {{esg_scores("environmental", company.environmental_score)}}
+            {{esg_scores("social", company.social_score)}}
+            {{esg_scores("governance", company.governance_score)}}
+            {{esg_scores("total", company.total_score)}}
+
+
+            <!-- PADDING -->
+            <div class="col-padding"></div>
+        </div>
+    </a>
+    {% endfor %}
+
+    <div class="row">
+        <div class="list-item">
+
+            {% if page > 0 %}
+            <a href="{{href}}?page={{page-1}}" class="btn btn-neutral"><i class="fa-solid fa-arrow-left"></i></a>
+            {% endif %}
+
+            <div class="btn-label">Page {{page + 1}} of {{page_count}}</div>
+
+            {% if page + 1 < page_count %} <a href="{{href}}?page={{page+1}}" class="btn btn-neutral"><i
+                    class="fa-solid fa-arrow-right"></i></a>
+                {% endif %}
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script%}
+<script>
+    highlightScores("companies")
+</script>
+{% endblock %}

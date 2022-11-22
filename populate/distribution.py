@@ -2,31 +2,44 @@ from numpy import percentile
 from app import app
 from database import db
 from models.company import Company
+from models.sector import Sector
 from models.distribution import Distribution
 
-companies = Company.query.all()
 
-environmental_scores = [
-    company.environmental_score for company in companies if company.environmental_score != None]
-social_scores = [
-    company.social_score for company in companies if company.social_score != None]
-governance_scores = [
-    company.governance_score for company in companies if company.governance_score != None]
-total_scores = [
-    company.total_score for company in companies if company.total_score != None]
+def get_scores(entities) -> dict:
+    return {
+        "environmental":
+        [entity.environmental_score for entity in entities if entity.environmental_score != None],
+        "social":
+        [entity.social_score for entity in entities if entity.social_score != None],
+        "governance":
+        [entity.governance_score for entity in entities if entity.governance_score != None],
+        "total":
+        [entity.total_score for entity in entities if entity.total_score != None]
+    }
 
 
-def set_percentiles(name, scores):
+def set_percentiles(name: str, scores: dict):
     """Takes the scores and calculates the 10th/90th percentiles as top/bottom. Append it to the db with name of scores."""
-    bottom = round(percentile(scores, 10))
-    top = round(percentile(scores, 90))
-    distribution = Distribution(name=name, top=top, bottom=bottom)
-    db.session.add(distribution)
+    d = Distribution.query.filter_by(name=name).first()
+    if not d:
+        d = Distribution(name=name)
+        db.session.add(d)
+    d.environmental_best = round(percentile(scores["environmental"], 90))
+    d.environmental_worst = round(percentile(scores["environmental"], 10))
+    d.social_best = round(percentile(scores["social"], 90))
+    d.social_worst = round(percentile(scores["social"], 10))
+    d.governance_best = round(percentile(scores["governance"], 90))
+    d.governance_worst = round(percentile(scores["governance"], 10))
+    d.total_best = round(percentile(scores["total"], 90))
+    d.total_worst = round(percentile(scores["total"], 10))
+    db.session.commit()
 
 
-set_percentiles("environmental", environmental_scores)
-set_percentiles("social", social_scores)
-set_percentiles("governance", governance_scores)
-set_percentiles("total", total_scores)
+companies = Company.query.all()
+companies_scores = get_scores(companies)
+set_percentiles("companies", companies_scores)
 
-db.session.commit()
+sectors = Sector.query.all()
+sector_scores = get_scores(sectors)
+set_percentiles("sectors", sector_scores)

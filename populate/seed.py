@@ -2,6 +2,7 @@ from app import app
 from database import db
 from models.exchange import Exchange
 from models.city import City
+from models.sector import Sector
 
 db.create_all()
 
@@ -105,4 +106,59 @@ tse = Exchange.add(
     symbol="TSE",
     name="Toronto Stock Exchange",
     city=toronto
+)
+
+############
+# SECTORS
+############
+
+energy = Sector.add(
+    name="Energy",
+    logo_class="fa-solid fa-lightbulb"
+)
+
+utilities = Sector.add(
+    name="Utilities",
+    logo_class="fa-solid fa-bolt"
+)
+
+materials = Sector.add(
+    name="Basic Materials",
+    logo_class="fa-solid fa-tree"
+)
+
+technology = Sector.add(
+    name="Technology",
+    logo_class="fa-solid fa-microchip"
+)
+
+industrials = Sector.add(
+    name="Industrials",
+    logo_class="fa-solid fa-helmet-safety"
+)
+
+consumer_defensive = Sector.add(
+    name="Consumer Defensive",
+    logo_class="fa-solid fa-utensils"
+)
+healthcare = Sector.add(
+    name="Healthcare",
+    logo_class="fa-solid fa-kit-medical"
+)
+financial_services = Sector.add(
+    name="Financial Services",
+    logo_class="fa-solid fa-credit-card"
+)
+real_estate = Sector.add(
+    name="Real Estate",
+    logo_class="fa-solid fa-house"
+)
+communication_services = Sector.add(
+    name="Communication Services",
+    logo_class="fa-solid fa-wifi"
+)
+
+consumer_cyclical = Sector.add(
+    name="Consumer Cyclical",
+    logo_class="fa-solid fa-cart-shopping"
 )
