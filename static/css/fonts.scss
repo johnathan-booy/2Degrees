@@ -1,4 +1,5 @@
 @use "colors";
+@use "screens";
 
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Ropa+Sans&family=Titillium+Web&display=swap");
 
@@ -11,44 +12,79 @@ input,
 textarea,
 button {
 	font-family: $general;
-	font-size: 1rem;
 	color: colors.$dark-text;
+	@media (max-width: screens.$tablet) {
+		font-size: 0.9rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 1rem;
+	}
 }
 
 h1,
 .h1 {
 	font-family: $title;
-	font-size: 3.5rem;
+	@media (max-width: screens.$tablet) {
+		font-size: 3rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 3.5rem;
+	}
 }
 
 h2,
 .h2 {
 	font-family: $title;
-	font-size: 2.5rem;
+	@media (max-width: screens.$tablet) {
+		font-size: 2.2rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 2.5rem;
+	}
 }
 
 h3,
 .h3 {
 	font-family: $subtitle;
-	font-size: 1.8rem;
+	@media (max-width: screens.$tablet) {
+		font-size: 1.5rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 1.8rem;
+	}
 }
 
 h4,
 .h4 {
 	font-family: $subtitle;
-	font-size: 1.5rem;
+	@media (max-width: screens.$tablet) {
+		font-size: 1.2rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 1.5rem;
+	}
 }
 
 h5,
 .h5 {
 	font-family: $subtitle;
-	font-size: 1.2rem;
+	@media (max-width: screens.$tablet) {
+		font-size: 1rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 1.2rem;
+	}
 }
 
 h6,
 .h6 {
 	font-family: $subtitle;
-	font-size: 1.2rem;
+	@media (max-width: screens.$tablet) {
+		font-size: 0.9rem;
+	}
+	@media (min-width: screens.$tablet) {
+		font-size: 1rem;
+	}
 }
 
 small,
