@@ -1,0 +1,83 @@
+<!-- HEADER FOR ESG COLUMNS-->
+{% macro esg_header(letter, name)%}
+<div class="flex-col-center col-md">
+    <span class="hide-sm">
+        {{name}}
+    </span>
+    <span class="hide-lg">
+        {{letter}}
+    </span>
+    <a class='btn-sm 
+    {% if type.upper() == letter %}
+    btn-accent
+    {% else %}
+    btn-neutral
+    {% endif %}' href="{{href}}/{{ranking}}/{{letter.lower()}}">
+        <i class="fa-solid fa-sort"></i>
+    </a>
+</div>
+{% endmacro%}
+
+
+<!-- RANK FOR LIST ITEM -->
+<!-- use call -->
+{% macro rank() %}
+<div class="flex-col-center col-sm">
+    <span>{{caller()}}</span>
+</div>
+{% endmacro %}
+
+<!-- LOGO FOR LIST ITEM -->
+<!-- use call -->
+{% macro logo() %}
+<div class="flex-col-center col-md">
+    <div class="logo">
+        {{caller()}}
+    </div>
+</div>
+{% endmacro %}
+
+<!-- NAME FOR LIST ITEM -->
+<!-- use call -->
+{% macro name() %}
+<div class="flex-col-start col-lg">
+    {{caller()}}
+</div>
+{% endmacro %}
+
+<!-- ESG SCORES FOR LIST ITEM -->
+{% macro esg(object) %}
+{{esg_score("environmental", object.environmental_score)}}
+{{esg_score("social", object.social_score)}}
+{{esg_score("governance", object.governance_score)}}
+{{esg_score("total", object.total_score)}}
+{% endmacro %}
+
+{% macro esg_score(type, score) %}
+<div class="flex-col-center col-md">
+    <div class="{{type}}" data-score="{{score}}">
+        {{score}}
+    </div>
+</div>
+{% endmacro %}
+
+<!-- PADDING CELL FOR LIST -->
+{% macro padding() %}
+<div class="col-padding"></div>
+{% endmacro %}
+
+
+<!-- LIST ITEM -->
+{% macro list_item(object, url) %}
+<a class="row row-link" href="{{url}}">
+    <div class="list-item">
+        {{ padding() }}
+
+        {{ caller() }}
+
+        {{ esg(object) }}
+
+        {{ padding() }}
+    </div>
+</a>
+{% endmacro %}

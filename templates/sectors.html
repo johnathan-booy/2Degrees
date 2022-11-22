@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% from "list/macros.j2" import list_item, padding, rank, logo, name, esg %}
 
 {% block title %}
 <title>Sectors | 2Degrees Investing</title>
@@ -10,117 +10,31 @@
 
 <h2 class="display-4">Sectors</h2>
 
-<div class="container mb-2">
-    <div class="btn-label">Ranked by:</div>
-    <a href="/sectors/best/{{type}}" class="btn 
-            {% if ranking.lower() == 'best' %}
-                btn-accent
-            {% else %}
-                btn-neutral
-            {% endif %}">
-        Best
-    </a>
-    <a href="/sectors/worst/{{type}}" class="btn 
-            {% if ranking.lower() == 'worst' %}
-                btn-accent
-            {% else %}
-                btn-neutral
-            {% endif %}">
-        Worst
-    </a>
-</div>
+{% include "list/ranking.html" %}
 
 <div class="list mb-5 pb-3">
-    <div class="row">
-        <div class="list-item list-header">
-            <!-- PADDING -->
-            <div class="col-padding"></div>
-            <!-- TABLE KEYS -->
-            <div class="col-combined flex-row-center">
-                <div class="flex-col-center pt-5">
-                    <div class="key-best"></div>
-                    <div class="small">Best 10%</div>
-                </div>
-                <div class="flex-col-center pt-5">
-                    <div class="key-worst"></div>
-                    <div class="small">Worst 10%</div>
-                </div>
-            </div>
-            <!-- ESG RATINGS -->
-            {% macro esg_header(letter, name)%}
-            <div class="flex-col-center col-md">
-                <span class="hide-sm">
-                    {{name}}
-                </span>
-                <span class="hide-lg">
-                    {{letter}}
-                </span>
-                <a class='btn-sm 
-                {% if type.upper() == letter %}
-                btn-accent
-                {% else %}
-                btn-neutral
-                {% endif %}' href="/sectors/{{ranking}}/{{letter.lower()}}">
-                    <i class="fa-solid fa-sort"></i>
-                </a>
-            </div>
-            {% endmacro%}
-            {{ esg_header(letter="E", name="Environmental")}}
-            {{ esg_header(letter="S", name="Social")}}
-            {{ esg_header(letter="G", name="Governance")}}
-            {{ esg_header(letter="T", name="Total")}}
-
-            <!--PADDING -->
-            <div class="col-padding"></div>
-        </div>
-    </div>
+    {% include "list/header.html" %}
 
     {% for sector in sectors %}
-    <a class="row row-link" href="">
-        <div class="list-item">
-
-            <!-- PADDING -->
-            <div class="col-padding"></div>
-
-            <!-- RANK -->
-            <div class="flex-col-center col-sm">
-                <span>{{loop.index}}</span>
-            </div>
-
-            <!-- LOGO -->
-            <div class="flex-col-center col-md">
-                <div class="logo">
-                    <i class="{{sector.logo_class}} h4"></i>
-                </div>
-            </div>
-
-            <!-- SECTOR -->
-            <div class="flex-col-start col-lg">
-                <div class="h5">{{sector.name}}</div>
-            </div>
-
-            <!-- ESG SCORES -->
-            {% macro esg_scores(type, score) %}
-            <div class="flex-col-center col-md">
-                <div class="{{type}}" data-score="{{score}}">
-                    {{score}}
-                </div>
-            </div>
-            {% endmacro %}
-
-            {{esg_scores("environmental", sector.environmental_score)}}
-            {{esg_scores("social", sector.social_score)}}
-            {{esg_scores("governance", sector.governance_score)}}
-            {{esg_scores("total", sector.total_score)}}
+    {% call list_item(sector, "") %}
 
 
-            <!-- PADDING -->
-            <div class="col-padding"></div>
-        </div>
-    </a>
+    {% call rank() %}
+    {{loop.index}}
+    {% endcall %}
+
+    {% call logo() %}
+    <i class="fa-solid {{sector.logo_class}} h4"></i>
+    {% endcall %}
+
+    {% call name() %}
+    <div class="h5">{{sector.name}}</div>
+    {% endcall %}
+
+
+    {% endcall %}
     {% endfor %}
 </div>
-
 {% endblock %}
 
 {% block script%}

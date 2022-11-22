@@ -114,51 +114,51 @@ tse = Exchange.add(
 
 energy = Sector.add(
     name="Energy",
-    logo_class="fa-solid fa-lightbulb"
+    logo_class="fa-lightbulb"
 )
 
 utilities = Sector.add(
     name="Utilities",
-    logo_class="fa-solid fa-bolt"
+    logo_class="fa-bolt"
 )
 
 materials = Sector.add(
     name="Basic Materials",
-    logo_class="fa-solid fa-tree"
+    logo_class="fa-tree"
 )
 
 technology = Sector.add(
     name="Technology",
-    logo_class="fa-solid fa-microchip"
+    logo_class="fa-microchip"
 )
 
 industrials = Sector.add(
     name="Industrials",
-    logo_class="fa-solid fa-helmet-safety"
+    logo_class="fa-helmet-safety"
 )
 
 consumer_defensive = Sector.add(
     name="Consumer Defensive",
-    logo_class="fa-solid fa-utensils"
+    logo_class="fa-utensils"
 )
 healthcare = Sector.add(
     name="Healthcare",
-    logo_class="fa-solid fa-kit-medical"
+    logo_class="fa-kit-medical"
 )
 financial_services = Sector.add(
     name="Financial Services",
-    logo_class="fa-solid fa-credit-card"
+    logo_class="fa-credit-card"
 )
 real_estate = Sector.add(
     name="Real Estate",
-    logo_class="fa-solid fa-house"
+    logo_class="fa-house"
 )
 communication_services = Sector.add(
     name="Communication Services",
-    logo_class="fa-solid fa-wifi"
+    logo_class="fa-wifi"
 )
 
 consumer_cyclical = Sector.add(
     name="Consumer Cyclical",
-    logo_class="fa-solid fa-cart-shopping"
+    logo_class="fa-cart-shopping"
 )

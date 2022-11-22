@@ -50,7 +50,7 @@ def list_companies(ranking, type):
     count = 10
     page = int(request.args.get("page", 0))
     offset = page * count
-    href = f"/companies/{ranking}/{type}"
+    href = "/companies"
 
     companies = Company.ranked(
         type, count=count, offset=offset, ranking=ranking)
@@ -83,7 +83,7 @@ def list_sectors(ranking, type):
     if type not in "ESGT" or len(type) != 1:
         return redirect("/sectors/best/e")
 
-    href = f"/sectors/{ranking}/{type}"
+    href = "/sectors"
 
     sectors = Sector.ranked(type, ranking)
 
