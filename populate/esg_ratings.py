@@ -13,6 +13,7 @@ Return object will include:
 """
 
 import requests
+from numpy import average
 from api_tokens import ESG_ENTERPRISE_TOKEN
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import or_
@@ -20,6 +21,8 @@ from app import app
 from database import db
 from models.company import Company
 from models.exchange import Exchange
+from models.sector import Sector
+from models.country import Country
 from helpers.strip_date import strip_date
 from helpers.divide_list import divide_list
 
@@ -38,17 +41,22 @@ class ESGRatings():
 
     @classmethod
     def populate(cls):
-        """Calls the necessary functions to update outdated ESG ratings"""
         esg = cls()
+        esg.populate_companies()
+        esg.populate_sectors()
+        esg.populate_countries()
 
-        groups = divide_list(esg.companies, 10)
+    def populate_companies(self):
+        """Calls the necessary functions to update outdated ESG ratings"""
+
+        groups = divide_list(self.companies, 10)
 
         for group in groups:
-            resp = esg.request(group)
+            resp = self.request(group)
 
             if not resp.ok:
-                esg.error(group, resp)
-                return esg
+                self.api_error(group, resp)
+                return self
 
             ratings = resp.json()
 
@@ -63,22 +71,21 @@ class ESGRatings():
                 if not company:
                     continue
 
-                esg.update_date(rating, company)
-                esg.update_ratings(rating, company)
-                company.esg_last_retrieved = esg.datetime_now
+                print("Updated company ->", company.name)
+                self .update_date(rating, company)
+                self.update_ratings(rating, company)
+                company.esg_last_retrieved = self.datetime_now
 
-                esg.updated.append(company)
+                self.updated.append(company)
             db.session.commit()
 
-        return esg
-
-    def error(self, group, resp) -> dict:
+    def api_error(self, group, resp) -> dict:
         """Log information about a request error"""
-        symbols = [company.symbol for company in group]
+        print("API ERROR ->", resp.status_code)
         error = {
             "status_code": resp.status_code,
             "reason": resp.json()['Error'],
-            "symbols": symbols,
+            "companies": group,
         }
         self.errors.append(error)
         for company in group:
@@ -156,6 +163,56 @@ class ESGRatings():
             'total_level', company.total_level)
         company.total_grade = rating.get(
             'total_grade', company.total_grade)
+
+    def populate_sectors(self) -> None:
+        sectors = Sector.query.all()
+
+        for sector in sectors:
+            print("Updated sector ->", sector.name)
+
+            e_scores = [
+                c.environmental_score for c in sector.companies if c.environmental_score != None]
+            s_scores = [
+                c.social_score for c in sector.companies if c.social_score != None]
+            g_scores = [
+                c.governance_score for c in sector.companies if c.governance_score != None]
+            t_scores = [
+                c.total_score for c in sector.companies if c.total_score != None]
+
+            if not e_scores or not s_scores or not g_scores or not t_scores:
+                continue
+
+            sector.environmental_score = round(average(e_scores))
+            sector.social_score = round(average(s_scores))
+            sector.governance_score = round(average(g_scores))
+            sector.total_score = round(average(t_scores))
+
+        db.session.commit()
+
+    def populate_countries(self) -> None:
+        countries = Country.query.all()
+
+        for country in countries:
+            print("Updated country ->", country.name)
+
+            e_scores = [
+                c.environmental_score for c in country.companies if c.environmental_score != None]
+            s_scores = [
+                c.social_score for c in country.companies if c.social_score != None]
+            g_scores = [
+                c.governance_score for c in country.companies if c.governance_score != None]
+            t_scores = [
+                c.total_score for c in country.companies if c.total_score != None]
+
+            if not e_scores or not s_scores or not g_scores or not t_scores:
+                continue
+
+            country.environmental_score = round(average(e_scores))
+            country.social_score = round(average(s_scores))
+            country.governance_score = round(average(g_scores))
+            country.total_score = round(average(t_scores))
+
+        db.session.commit()
 
 
 """ 

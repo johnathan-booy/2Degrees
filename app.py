@@ -42,10 +42,10 @@ def list_companies(ranking, type):
     ranking = ranking.lower()
 
     if ranking not in ["best", "worst"]:
-        return redirect("/companies/best/e")
+        return redirect("/companies/best/t")
 
     if type not in "ESGT" or len(type) != 1:
-        return redirect("/companies/best/e")
+        return redirect("/companies/best/t")
 
     count = 10
     page = int(request.args.get("page", 0))
@@ -78,10 +78,10 @@ def list_sectors(ranking, type):
     ranking = ranking.lower()
 
     if ranking not in ["best", "worst"]:
-        return redirect("/sectors/best/e")
+        return redirect("/sectors/best/t")
 
     if type not in "ESGT" or len(type) != 1:
-        return redirect("/sectors/best/e")
+        return redirect("/sectors/best/t")
 
     href = "/sectors"
 
@@ -91,6 +91,33 @@ def list_sectors(ranking, type):
 
     return render_template("sectors.html",
                            sectors=sectors,
+                           distributions=distributions,
+                           ranking=ranking,
+                           type=type,
+                           href=href)
+
+
+@app.route("/countries/<ranking>/<type>")
+def list_countries(ranking, type):
+    """List the best or worst countries, ranked by ESG or Total scores."""
+
+    type = type.upper()
+    ranking = ranking.lower()
+
+    if ranking not in ["best", "worst"]:
+        return redirect("/countries/best/t")
+
+    if type not in "ESGT" or len(type) != 1:
+        return redirect("/countries/best/t")
+
+    href = "/countries"
+
+    countries = Country.ranked(type, ranking)
+
+    distributions = Distribution.query.filter_by(name="countries").first()
+
+    return render_template("countries.html",
+                           countries=countries,
                            distributions=distributions,
                            ranking=ranking,
                            type=type,

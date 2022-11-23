@@ -3,6 +3,7 @@ from app import app
 from database import db
 from models.company import Company
 from models.sector import Sector
+from models.country import Country
 from models.distribution import Distribution
 
 
@@ -43,3 +44,7 @@ set_percentiles("companies", companies_scores)
 sectors = Sector.query.all()
 sector_scores = get_scores(sectors)
 set_percentiles("sectors", sector_scores)
+
+countries = Country.query.all()
+country_scores = get_scores(countries)
+set_percentiles("countries", country_scores)
