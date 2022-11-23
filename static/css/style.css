@@ -488,4 +488,44 @@ body {
   background-color: #e7bdb6;
 }
 
+#not-found-message {
+  width: 100%;
+  position: relative;
+  color: white;
+}
+#not-found-message img {
+  width: 100%;
+  position: relative;
+}
+#not-found-message h1 {
+  position: absolute;
+}
+@media (max-width: 499px) {
+  #not-found-message h1 {
+    bottom: 25%;
+    left: 6%;
+  }
+}
+@media (min-width: 500px) {
+  #not-found-message h1 {
+    bottom: 7%;
+    left: 10%;
+  }
+}
+#not-found-message h3 {
+  position: absolute;
+}
+@media (max-width: 499px) {
+  #not-found-message h3 {
+    bottom: 10%;
+    left: 6%;
+  }
+}
+@media (min-width: 500px) {
+  #not-found-message h3 {
+    bottom: 3%;
+    left: 10%;
+  }
+}
+
 /*# sourceMappingURL=style.css.map */

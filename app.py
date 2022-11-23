@@ -1,5 +1,6 @@
 from math import ceil
-from flask import Flask, render_template, redirect, jsonify, request
+from flask import Flask, render_template, redirect, jsonify, request, abort
+from functools import wraps
 from sqlalchemy import func, within_group, select
 from sqlalchemy.orm import Session
 from database import db, connect_db
@@ -28,6 +29,22 @@ app.config.update(
 connect_db(app)
 
 
+def validate_ranking(f):
+    @wraps(f)
+    def wrapper(ranking, type):
+        ranking = ranking.lower()
+        type = type.upper()
+
+        if ranking not in ["best", "worst"]:
+            abort(404)
+
+        if type not in "ESGT" or len(type) != 1:
+            abort(404)
+
+        return f(ranking, type)
+    return wrapper
+
+
 @ app.route('/')
 def homepage():
     """Show homepage"""
@@ -35,17 +52,9 @@ def homepage():
 
 
 @app.route("/companies/<ranking>/<type>")
+@validate_ranking
 def list_companies(ranking, type):
     """List the best or worst companies, ranked by ESG or Total scores."""
-
-    type = type.upper()
-    ranking = ranking.lower()
-
-    if ranking not in ["best", "worst"]:
-        return redirect("/companies/best/t")
-
-    if type not in "ESGT" or len(type) != 1:
-        return redirect("/companies/best/t")
 
     count = 10
     page = int(request.args.get("page", 0))
@@ -71,22 +80,12 @@ def list_companies(ranking, type):
 
 
 @app.route("/sectors/<ranking>/<type>")
+@validate_ranking
 def list_sectors(ranking, type):
     """List the best or worst sectors, ranked by ESG or Total scores."""
 
-    type = type.upper()
-    ranking = ranking.lower()
-
-    if ranking not in ["best", "worst"]:
-        return redirect("/sectors/best/t")
-
-    if type not in "ESGT" or len(type) != 1:
-        return redirect("/sectors/best/t")
-
     href = "/sectors"
-
     sectors = Sector.ranked(type, ranking)
-
     distributions = Distribution.query.filter_by(name="sectors").first()
 
     return render_template("sectors.html",
@@ -98,22 +97,12 @@ def list_sectors(ranking, type):
 
 
 @app.route("/countries/<ranking>/<type>")
+@validate_ranking
 def list_countries(ranking, type):
     """List the best or worst countries, ranked by ESG or Total scores."""
 
-    type = type.upper()
-    ranking = ranking.lower()
-
-    if ranking not in ["best", "worst"]:
-        return redirect("/countries/best/t")
-
-    if type not in "ESGT" or len(type) != 1:
-        return redirect("/countries/best/t")
-
     href = "/countries"
-
     countries = Country.ranked(type, ranking)
-
     distributions = Distribution.query.filter_by(name="countries").first()
 
     return render_template("countries.html",
@@ -192,3 +181,8 @@ def handle_exception(err):
     # Add some logging so that we can monitor different types of errors
     app.logger.error(f"{err.description}: {response['message']}")
     return jsonify(response), err.code
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404

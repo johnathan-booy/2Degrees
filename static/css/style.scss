@@ -127,3 +127,35 @@
 		}
 	}
 }
+
+#not-found-message {
+	width: 100%;
+	position: relative;
+	color: colors.$light-text;
+	img {
+		width: 100%;
+		position: relative;
+	}
+	h1 {
+		position: absolute;
+		@media (max-width: 499px) {
+			bottom: 25%;
+			left: 6%;
+		}
+		@media (min-width: 500px) {
+			bottom: 7%;
+			left: 10%;
+		}
+	}
+	h3 {
+		position: absolute;
+		@media (max-width: 499px) {
+			bottom: 10%;
+			left: 6%;
+		}
+		@media (min-width: 500px) {
+			bottom: 3%;
+			left: 10%;
+		}
+	}
+}
