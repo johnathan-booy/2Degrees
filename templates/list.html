@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ name.title() }} | 2Degrees</title>
+{% endblock %}
+
+{% block content %}
+
+<!-- ----- -->
+<!-- TITLE -->
+<!-- ----- -->
+<h2 class="display-4">{{ name.title() }}</h2>
+
+<!-- ------- -->
+<!-- RANKING -->
+<!-- ------- -->
+<div class="container mb-2">
+    <div class="btn-label">Ranked by:</div>
+    <a href="/{{name}}/best/{{type}}" class="btn 
+            {% if ranking.lower() == 'best' %}
+                btn-accent
+            {% else %}
+                btn-neutral
+            {% endif %}">
+        Best
+    </a>
+    <a href="/{{name}}/worst/{{type}}" class="btn 
+            {% if ranking.lower() == 'worst' %}
+                btn-accent
+            {% else %}
+                btn-neutral
+            {% endif %}">
+        Worst
+    </a>
+</div>
+
+<!-- ---- -->
+<!-- LIST -->
+<!-- ---- -->
+<div class="list mb-5">
+
+    <!-- ------ -->
+    <!-- HEADER -->
+    <!-- ------ -->
+    <div class="row">
+        <div class="list-item list-header">
+
+            {{ padding() }}
+
+            <!-- ---------- -->
+            <!-- TABLE KEYS -->
+            <!-- ---------- -->
+            <div class="col-combined flex-row-center">
+                <div class="flex-col-center pt-5">
+                    <div class="key-best"></div>
+                    <div class="small">Best 10%</div>
+                </div>
+                <div class="flex-col-center pt-5">
+                    <div class="key-worst"></div>
+                    <div class="small">Worst 10%</div>
+                </div>
+            </div>
+
+            <!-- ---- -->
+            <!-- ESGT -->
+            <!-- ---- -->
+            {{ esg_header("Environmental")}}
+            {{ esg_header("Social")}}
+            {{ esg_header("Governance")}}
+            {{ esg_header("Total")}}
+
+            {{ padding() }}
+
+        </div>
+    </div>
+
+    <!-- ---------- -->
+    <!-- LIST ITEMS -->
+    <!-- ---------- -->
+    {% for object in objects %}
+    <a class="row row-link" href="/{{name}}/{{object.id}}">
+        <div class="list-item">
+            {{ padding() }}
+
+            <!-- ---- -->
+            <!-- RANK -->
+            <!-- ---- -->
+            <div class="flex-col-center col-sm">
+                <span>{{loop.index + offset}}</span>
+            </div>
+
+            <!-- ---- -->
+            <!-- LOGO -->
+            <!-- ---- -->
+            <div class="flex-col-center col-md">
+                <div class="logo">
+                    {% if name == "companies" %}
+                    <img src="{{object.logo_url}}" alt="{{object.name}} Logo">
+                    {% elif name == "sectors" %}
+                    <i class="fa-solid {{object.logo_class}} h4"></i>
+                    {% elif name == "countries" %}
+                    <img src="https://countryflagsapi.com/png/{{object.name}}" alt="{{object.name}} Logo">
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- ---- -->
+            <!-- NAME -->
+            <!-- ---- -->
+            <div class="flex-col-start col-lg">
+                {% if name == "companies" %}
+                <div class="h4">{{object.symbol}}</div>
+                <div class="small">{{object.name}}</div>
+                {% else %}
+                <div class="h5">{{object.name}}</div>
+                {% endif %}
+            </div>
+
+            <!-- ---- -->
+            <!-- ESGT -->
+            <!-- ---- -->
+            {{ esg_score(
+            "environmental",
+            object.environmental_score,
+            distribution.environmental_best,
+            distribution.environmental_worst) }}
+
+            {{ esg_score(
+            "social",
+            object.social_score,
+            distribution.social_best,
+            distribution.social_worst) }}
+
+            {{ esg_score(
+            "governance",
+            object.governance_score,
+            distribution.governance_best,
+            distribution.governance_worst) }}
+
+            {{ esg_score(
+            "total",
+            object.total_score,
+            distribution.total_best,
+            distribution.total_worst) }}
+
+            {{ padding() }}
+        </div>
+    </a>
+    {% endfor %}
+
+
+    <!-- ---------- -->
+    <!-- PAGINATION -->
+    <!-- ---------- -->
+    <div class="row">
+        <div class="list-item">
+            {% if page > 0 %}
+            <a href="/{{name}}/{{ranking}}/{{type}}?page={{page-1}}" class="btn btn-neutral"><i
+                    class="fa-solid fa-arrow-left"></i></a>
+            {% endif %}
+
+            <div class="btn-label">Page {{page + 1}} of {{page_count}}</div>
+
+            {% if page + 1 < page_count %} <a href="/{{name}}/{{ranking}}/{{type}}?page={{page+1}}"
+                class="btn btn-neutral">
+                <i class="fa-solid fa-arrow-right"></i></a>
+                {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<!-- ------ -->
+<!-- MACROS -->
+<!-- ------ -->
+
+<!-- ---------- -->
+<!-- ESG HEADER -->
+<!-- ---------- -->
+{% macro esg_header(rating)%}
+<div class="flex-col-center col-md">
+    <span class="hide-sm">
+        {{rating}}
+    </span>
+    <span class="hide-lg">
+        {{rating[0]}}
+    </span>
+    <a class='btn-sm 
+    {% if type.upper() == rating[0] %}
+    btn-accent
+    {% else %}
+    btn-neutral
+    {% endif %}' href="/{{name}}/{{ranking}}/{{rating[0]}}">
+        <i class="fa-solid fa-sort"></i>
+    </a>
+</div>
+{% endmacro%}
+
+<!-- ------- -->
+<!-- PADDING -->
+<!-- ------- -->
+{% macro padding() %}
+<div class="col-padding"></div>
+{% endmacro %}
+
+<!-- --------- -->
+<!-- ESG SCORE -->
+<!-- --------- -->
+{% macro esg_score(type, score, best, worst) %}
+<div class="flex-col-center col-md">
+    <div class='{{type}} 
+    {% if score >= best %}
+    best
+    {% endif %}'>
+        {{score}}
+    </div>
+</div>
+{% endmacro %}

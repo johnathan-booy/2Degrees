@@ -1,13 +1,14 @@
 from database import db
+from models.esgt_list import ESGTList
 
 
-class Country(db.Model):
+class Country(ESGTList, db.Model):
     """Model for countries table"""
 
     __tablename__ = "countries"
 
     def __repr__(self) -> str:
-        return f"<Country  {self.name}>"
+        return f"<Country {self.name}>"
 
     id = db.Column(
         db.Integer,
@@ -17,18 +18,6 @@ class Country(db.Model):
     name = db.Column(
         db.String(),
         nullable=False
-    )
-    environmental_score = db.Column(
-        db.Integer
-    )
-    social_score = db.Column(
-        db.Integer
-    )
-    governance_score = db.Column(
-        db.Integer
-    )
-    total_score = db.Column(
-        db.Integer
     )
     cities = db.relationship(
         "City",
@@ -50,36 +39,6 @@ class Country(db.Model):
         backref="country",
         cascade="all, delete"
     )
-
-    @classmethod
-    def ranked(cls, type: str, ranking: str) -> list:
-        """Return sectors ranked best or worst based on ESGT ratings"""
-
-        if ranking != "worst" and ranking != "best":
-            return
-
-        q1 = None
-        q2 = cls.total_score
-
-        match type:
-            case "E":
-                q1 = cls.environmental_score
-            case "S":
-                q1 = cls.social_score
-            case "G":
-                q1 = cls.governance_score
-            case "T":
-                q1 = cls.total_score
-                q2 = cls.environmental_score
-
-        return (
-            cls.query
-            .filter(q1 != None)
-            .order_by(
-                q1.desc() if ranking == "best" else q1,
-                q2.desc() if ranking == "best" else q2)
-            .all()
-        )
 
     @classmethod
     def add(cls, name):

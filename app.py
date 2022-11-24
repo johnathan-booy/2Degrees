@@ -29,11 +29,22 @@ app.config.update(
 connect_db(app)
 
 
-def validate_ranking(f):
+def validate_list(f):
     @wraps(f)
-    def wrapper(ranking, type):
+    def wrapper(name, ranking, type):
+        name = name.lower()
         ranking = ranking.lower()
         type = type.upper()
+        cls_ = None
+
+        if name == "companies":
+            cls_ = Company
+        elif name == "sectors":
+            cls_ = Sector
+        elif name == "countries":
+            cls_ = Country
+        else:
+            abort(404)
 
         if ranking not in ["best", "worst"]:
             abort(404)
@@ -41,7 +52,7 @@ def validate_ranking(f):
         if type not in "ESGT" or len(type) != 1:
             abort(404)
 
-        return f(ranking, type)
+        return f(cls_, name, ranking, type)
     return wrapper
 
 
@@ -51,66 +62,31 @@ def homepage():
     return redirect('/companies/best/e')
 
 
-@app.route("/companies/<ranking>/<type>")
-@validate_ranking
-def list_companies(ranking, type):
-    """List the best or worst companies, ranked by ESG or Total scores."""
+@app.route("/<name>/<ranking>/<type>")
+@validate_list
+def list_objects(cls_, name, ranking, type):
+    """List the best or worst objects, ranked by ESGT scores."""
 
     count = 10
     page = int(request.args.get("page", 0))
     offset = page * count
-    href = "/companies"
 
-    companies = Company.ranked(
+    objects = cls_.ranked(
         type, count=count, offset=offset, ranking=ranking)
 
-    distributions = Distribution.query.filter_by(name="companies").first()
+    distribution = Distribution.query.filter_by(name=name).first()
 
-    page_count = ceil(Company.num_of_rated() / count)
+    page_count = ceil(cls_.num_of_rated() / count)
 
-    return render_template("companies.html",
-                           companies=companies,
-                           distributions=distributions,
+    return render_template("list.html",
+                           name=name,
+                           objects=objects,
+                           distribution=distribution,
                            ranking=ranking,
                            type=type,
                            page=page,
                            page_count=page_count,
-                           offset=offset,
-                           href=href)
-
-
-@app.route("/sectors/<ranking>/<type>")
-@validate_ranking
-def list_sectors(ranking, type):
-    """List the best or worst sectors, ranked by ESG or Total scores."""
-
-    href = "/sectors"
-    sectors = Sector.ranked(type, ranking)
-    distributions = Distribution.query.filter_by(name="sectors").first()
-
-    return render_template("sectors.html",
-                           sectors=sectors,
-                           distributions=distributions,
-                           ranking=ranking,
-                           type=type,
-                           href=href)
-
-
-@app.route("/countries/<ranking>/<type>")
-@validate_ranking
-def list_countries(ranking, type):
-    """List the best or worst countries, ranked by ESG or Total scores."""
-
-    href = "/countries"
-    countries = Country.ranked(type, ranking)
-    distributions = Distribution.query.filter_by(name="countries").first()
-
-    return render_template("countries.html",
-                           countries=countries,
-                           distributions=distributions,
-                           ranking=ranking,
-                           type=type,
-                           href=href)
+                           offset=offset)
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])

@@ -40,3 +40,12 @@ class Distribution(db.Model):
             }
         }
         return serialized
+
+    def __setitem__(self, key, value):
+        setattr(self, key, value)
+
+    def __getitem__(self, key):
+        return getattr(self, key)
+
+    def __repr__(self) -> str:
+        return f"<Distribution {self.name}>"

@@ -1,8 +1,9 @@
 from urllib.parse import urlparse
 from database import db
+from models.esgt_list import ESGTList
 
 
-class Company(db.Model):
+class Company(ESGTList, db.Model):
     """Model for the companies table"""
 
     __tablename__ = "companies"
@@ -71,17 +72,11 @@ class Company(db.Model):
     esg_last_updated = db.Column(
         db.DateTime
     )
-    environmental_score = db.Column(
-        db.Integer
-    )
     environmental_level = db.Column(
         db.String()
     )
     environmental_grade = db.Column(
         db.String()
-    )
-    social_score = db.Column(
-        db.Integer
     )
     social_level = db.Column(
         db.String()
@@ -89,17 +84,11 @@ class Company(db.Model):
     social_grade = db.Column(
         db.String()
     )
-    governance_score = db.Column(
-        db.Integer
-    )
     governance_level = db.Column(
         db.String()
     )
     governance_grade = db.Column(
         db.String()
-    )
-    total_score = db.Column(
-        db.Integer
     )
     total_level = db.Column(
         db.String()
