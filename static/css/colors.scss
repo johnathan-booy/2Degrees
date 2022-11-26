@@ -9,10 +9,10 @@ $t3: 44%;
 $t4: 52%;
 
 // COLORS
-$success: #528e75;
-$danger: #b94f3c;
-$accent: #41418b;
-$neutral: #8e7b7b;
+$success: #529076;
+$danger: #95554a;
+$accent: #4b4b96;
+$neutral: #8a8593;
 
 $success-s4: darken($success, $s4);
 $success-s3: darken($success, $s3);
@@ -53,3 +53,4 @@ $accent-t4: lighten($accent, $t4);
 // ASSIGNED
 $light-text: $neutral-t4;
 $dark-text: $neutral-s3;
+$subtle: rgba($neutral, 0.04);

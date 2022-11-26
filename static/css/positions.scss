@@ -2,7 +2,6 @@
 	display: flex;
 	justify-content: center;
 	flex-direction: column;
-	padding: 5px;
 }
 
 .flex-col-center {
@@ -21,21 +20,28 @@
 }
 @mixin flex-row {
 	display: flex;
-	justify-content: center;
 	flex-direction: row;
-	padding: 5px;
 }
 .flex-row-center {
 	@include flex-row;
+	justify-content: center;
 	align-items: center;
 }
 
 .flex-row-start {
 	@include flex-row;
-	align-items: start;
+	justify-content: start;
+	align-items: center;
 }
 
 .flex-row-end {
 	@include flex-row;
+	justify-content: center;
 	align-items: end;
+}
+
+.flex-row-space-around {
+	@include flex-row;
+	justify-content: space-between;
+	align-items: center;
 }

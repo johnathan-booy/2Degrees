@@ -12,18 +12,29 @@
 </head>
 <body>
     <nav>
-        <a href="/companies/best/t">Companies</a>
-        <a href="/sectors/best/t">Sectors</a>
-        <a href="/countries/best/t">Countries</a>
+        <div class="nav-header">
+            <div class="website-logo">
+                <a href="/" class="website-name">2Degrees</a>
+            </div>
+            <div id="nav-toggle">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+        <ul id="nav-list">
+            <li class="nav-item"><a href="/companies/best/t">Companies</a></li>
+            <li class="nav-item"><a href="/sectors/best/t">Sectors</a></li>
+            <li class="nav-item"><a href="/countries/best/t">Countries</a></li>
+        </ul>
     </nav>
-    <div class="container">
+    <div class="main container py-5">
         {% block content %}{% endblock %}
     </div>
 
     <!-- AXIOS -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-    <script src="/static/js/highlightScores.js"></script>
+    <!-- SCRIPTS -->
+    <script src="/static/js/navbar.js"></script>
 
     {% block script %}{%endblock%}
 </body>

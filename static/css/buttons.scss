@@ -1,11 +1,12 @@
 @use "colors";
 
 @mixin button {
+	cursor: pointer;
 	border-radius: 0.5em;
 	display: inline-block;
 	text-align: center;
 	text-decoration: none;
-	transition: all 0.2s;
+	transition: all 0.2s ease-in-out;
 }
 
 .btn-sm {

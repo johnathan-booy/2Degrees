@@ -3,7 +3,13 @@
 @use "screens";
 
 * {
+	padding: 0;
+	margin: 0;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
 	box-sizing: border-box;
+	text-decoration: none;
+	list-style: none;
 }
 
 body {
@@ -15,23 +21,26 @@ body {
 .container {
 	margin-right: auto;
 	margin-left: auto;
-	padding-right: 15px;
-	padding-left: 15px;
-}
 
-@media (min-width: screens.$tablet) {
-	.container {
-		width: 750px;
+	@media (max-width: screens.$tablet) {
+		padding-right: 10px;
+		padding-left: 10px;
 	}
-}
-@media (min-width: screens.$laptop) {
-	.container {
-		width: 970px;
+
+	@media (min-width: screens.$tablet) {
+		padding-right: 20px;
+		padding-left: 20px;
+		width: screens.$tablet;
 	}
-}
-@media (min-width: screens.$desktop) {
-	.container {
-		width: 1170px;
+	@media (min-width: screens.$laptop) {
+		padding-right: 30px;
+		padding-left: 30px;
+		width: screens.$laptop;
+	}
+	@media (min-width: screens.$desktop) {
+		padding-right: 50px;
+		padding-left: 50px;
+		width: screens.$desktop;
 	}
 }
 

@@ -5,6 +5,7 @@
 @use "buttons";
 @use "spacers";
 @use "positions";
+@use "navbar";
 
 @mixin circle($size) {
 	border-radius: 50%;
@@ -35,14 +36,9 @@
 	}
 }
 
-.logo {
-	@include flex-circle(2.5rem, 3.5rem, 4rem, 4.5rem);
-
-	img {
-		object-fit: contain;
-		margin: auto;
-		width: 85%;
-	}
+.main {
+	background-color: colors.$subtle;
+	box-shadow: colors.$neutral-t3 0px 4px 16px 0px;
 }
 
 .list {
@@ -104,6 +100,16 @@
 				flex-basis: 400px;
 				flex-grow: 1.2;
 				flex-shrink: 0.82;
+			}
+
+			.logo {
+				@include flex-circle(2.5rem, 3.5rem, 4rem, 4.5rem);
+
+				img {
+					object-fit: contain;
+					margin: auto;
+					width: 85%;
+				}
 			}
 
 			.best {

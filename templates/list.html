@@ -9,12 +9,12 @@
 <!-- ----- -->
 <!-- TITLE -->
 <!-- ----- -->
-<h2 class="display-4">{{ name.title() }}</h2>
+<h2 class="display-4 mb-4">{{ name.title() }}</h2>
 
 <!-- ------- -->
 <!-- RANKING -->
 <!-- ------- -->
-<div class="container mb-2">
+<div class="container my-2">
     <div class="btn-label">Ranked by:</div>
     <a href="/{{name}}/best/{{type}}" class="btn 
             {% if ranking.lower() == 'best' %}
@@ -50,12 +50,12 @@
             <!-- ---------- -->
             <!-- TABLE KEYS -->
             <!-- ---------- -->
-            <div class="col-combined flex-row-center">
-                <div class="flex-col-center pt-5">
+            <div class="col-combined flex-row-center mt-3">
+                <div class="flex-col-center mx-2">
                     <div class="key-best"></div>
                     <div class="small">Best 10%</div>
                 </div>
-                <div class="flex-col-center pt-5">
+                <div class="flex-col-center mx-2">
                     <div class="key-worst"></div>
                     <div class="small">Worst 10%</div>
                 </div>
@@ -212,6 +212,8 @@
     <div class='{{type}} 
     {% if score >= best %}
     best
+    {% elif score <= worst %}
+    worst
     {% endif %}'>
         {{score}}
     </div>
