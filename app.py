@@ -1,5 +1,5 @@
 from math import ceil
-from flask import Flask, render_template, redirect, jsonify, request, abort
+from flask import Flask, render_template, redirect, jsonify, request, abort, url_for
 from functools import wraps
 from sqlalchemy import func, within_group, select
 from sqlalchemy.orm import Session
@@ -36,10 +36,15 @@ def validate_list(f):
         name = name.lower()
         ranking = ranking.lower()
         type = type.upper()
+        sector_id = None
+        country_id = None
         cls_ = None
 
         if name == "companies":
             cls_ = Company
+            sector_id = request.args.get("sector_id")
+            if not sector_id:
+                country_id = request.args.get("country_id")
         elif name == "sectors":
             cls_ = Sector
         elif name == "countries":
@@ -53,7 +58,7 @@ def validate_list(f):
         if type not in "ESGT" or len(type) != 1:
             abort(404)
 
-        return f(cls_, name, ranking, type)
+        return f(cls_, name, ranking, type, sector_id, country_id)
     return wrapper
 
 
@@ -65,23 +70,31 @@ def homepage():
 
 @app.route("/<name>/<ranking>/<type>")
 @validate_list
-def list_objects(cls_, name, ranking, type):
+def list_objects(cls_, name, ranking, type, sector_id, country_id):
     """List the best or worst objects, ranked by ESGT scores."""
 
     count = 10
     page = int(request.args.get("page", 0))
     offset = page * count
 
-    objects = cls_.ranked(
-        type, count=count, offset=offset, ranking=ranking)
+    sector = (Sector.query.get_or_404(sector_id)
+              if sector_id
+              else None)
+    country = (Country.query.get_or_404(country_id)
+               if country_id
+               else None)
+
+    objects = cls_.ranked(ranking, type, sector_id, country_id, count, offset)
 
     distribution = Distribution.query.filter_by(name=name).first()
     print(distribution)
 
-    page_count = ceil(cls_.num_of_rated() / count)
+    page_count = ceil(cls_.num_of_rated(sector_id, country_id) / count)
 
     return render_template("list.html",
                            name=name,
+                           sector=sector,
+                           country=country,
                            objects=objects,
                            distribution=distribution,
                            ranking=ranking,
@@ -100,6 +113,18 @@ def company_details(id):
                            company=company,
                            distribution=distribution,
                            articles=articles)
+
+
+@app.route("/sectors/<int:id>")
+def sector_details(id):
+    sector = Sector.query.get_or_404(id)
+    return redirect(f"/companies/best/t?sector_id={id}")
+
+
+@app.route("/countries/<int:id>")
+def country_details(id):
+    country = Country.query.get_or_404(id)
+    return redirect(f"/companies/best/t?sector_id={id}")
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])

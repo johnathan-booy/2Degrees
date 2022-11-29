@@ -19,7 +19,7 @@ class ESGTList(object):
     )
 
     @classmethod
-    def ranked(cls, type: str, count: int, offset: int, ranking: str) -> list:
+    def ranked(cls, ranking: str, type: str, sector_id: int, country_id: int, count: int, offset: int) -> list:
         """Return objects ranked best or worst based on ESGT ratings"""
 
         if ranking != "worst" and ranking != "best":
@@ -39,19 +39,36 @@ class ESGTList(object):
                 q1 = cls.total_score
                 q2 = cls.environmental_score
 
-        objects = (
-            cls.query
-            .filter(q1 != None)
-            .order_by(
-                q1.desc() if ranking == "best" else q1,
-                q2.desc() if ranking == "best" else q2)
-            .limit(count)
-            .offset(offset)
-            .all()
-        )
+        query = (cls.query
+                 .filter(q1 != None))
+
+        if sector_id:
+            query = query.filter(cls.sector_id == sector_id)
+
+        if country_id:
+            query = query.filter(cls.country_id == country_id)
+
+        objects = (query
+                   .order_by(
+                       q1.desc() if ranking == "best" else q1,
+                       q2.desc() if ranking == "best" else q2)
+                   .limit(count)
+                   .offset(offset)
+                   .all()
+                   )
 
         return objects
 
-    @classmethod
-    def num_of_rated(cls) -> int:
-        return cls.query.filter(cls.total_score != None).count()
+    @ classmethod
+    def num_of_rated(cls, sector_id: int, country_id: int) -> int:
+        query = (cls
+                 .query
+                 .filter(cls.total_score != None,))
+
+        if sector_id:
+            query = query.filter(cls.sector_id == sector_id)
+
+        if country_id:
+            query = query.filter(cls.country_id == country_id)
+
+        return (query.count())

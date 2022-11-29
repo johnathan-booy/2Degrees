@@ -170,6 +170,11 @@
 	}
 }
 
+.logo-lg {
+	width: 4rem !important;
+	height: 4rem !important;
+}
+
 .esg_score {
 	@include flex-circle(2.3rem, 2.8rem, 3.1rem, 3.5rem);
 }

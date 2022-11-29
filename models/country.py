@@ -19,6 +19,9 @@ class Country(ESGTList, db.Model):
         db.String(),
         nullable=False
     )
+    code = db.Column(
+        db.String()
+    )
     cities = db.relationship(
         "City",
         backref="country",

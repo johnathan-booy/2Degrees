@@ -108,40 +108,6 @@ class Company(ESGTList, db.Model):
         return f"https://logo.clearbit.com/{domain}"
 
     @classmethod
-    def ranked(cls, type: str, count: int, offset: int, ranking: str) -> list:
-        """Return companies ranked best or worst based on ESGT ratings"""
-
-        if ranking != "worst" and ranking != "best":
-            return
-
-        q1 = None
-        q2 = cls.total_score
-
-        match type:
-            case "E":
-                q1 = cls.environmental_score
-            case "S":
-                q1 = cls.social_score
-            case "G":
-                q1 = cls.governance_score
-            case "T":
-                q1 = cls.total_score
-                q2 = cls.environmental_score
-
-        companies = (
-            cls.query
-            .filter(q1 != None)
-            .order_by(
-                q1.desc() if ranking == "best" else q1,
-                q2.desc() if ranking == "best" else q2)
-            .limit(count)
-            .offset(offset)
-            .all()
-        )
-
-        return companies
-
-    @classmethod
     def esg_ranges(cls) -> dict:
         """Return the highest and lowests scores for each category in the database"""
         qe = cls.environmental_score
@@ -175,10 +141,6 @@ class Company(ESGTList, db.Model):
         }
 
         return ranges
-
-    @classmethod
-    def num_of_rated(cls) -> int:
-        return cls.query.filter(cls.total_score != None).count()
 
     def serialize(self) -> dict:
         """Return a dict representation of Company"""

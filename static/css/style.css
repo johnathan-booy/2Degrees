@@ -1113,6 +1113,11 @@ nav #nav-list li a:hover {
   object-fit: contain;
 }
 
+.logo-lg {
+  width: 4rem !important;
+  height: 4rem !important;
+}
+
 .esg_score {
   border-radius: 50%;
   overflow: hidden;

@@ -5,17 +5,20 @@
 {% endblock %}
 
 {% block content %}
-<div class="flex-row-center">
-    <div class="logo">
+<div class="flex-col-center">
+    <div class="logo logo-lg">
         <div class="logo-inner">
             <img src="{{company.logo_url}}" alt="{{company.name}} Logo">
         </div>
     </div>
-    <span class="h2 bold pl-4">{{company.symbol}}</span>
-    <span class="h2 light px-2">|</span>
-    <span class="h4 light">{{company.name}}</span>
+    <div class="flex-row-center">
+        <span class="h2 bold pl-3">{{company.symbol}}</span>
+        <span class="h2 light px-2">|</span>
+        <span class="h4 light">{{company.name}}</span>
+    </div>
 </div>
-<div class="two-panels mt-5">
+
+<div class="two-panels mt-3">
     <!-- LEFT -->
     <div class="left-panel">
         {% if company.environmental_score %}
@@ -136,7 +139,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex-col-start col-lg pl-2">
+                    <div class="flex-col-start col-lg p-2">
                         <div class="h5">{{article.publisher}}</div>
                         <div class="small">{{article.title}}</div>
                     </div>

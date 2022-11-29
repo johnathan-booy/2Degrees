@@ -161,7 +161,8 @@ class Profiles():
                        .first())
             if not country:
                 print(f"Added country -> {country_name}")
-                country = Country(name=country_name)
+                code = self.get_country_code(country_name)
+                country = Country(name=country_name, code=code)
                 db.session.add(country)
                 db.session.commit()
             company.country_id = country.id
@@ -194,3 +195,13 @@ class Profiles():
                 db.session.add(city)
                 db.session.commit()
             company.city_id = city.id
+
+    def get_country_code(self, name):
+        try:
+            resp = requests.get("https://flagcdn.com/en/codes.json")
+            data = resp.json()
+            codes = {y: x for x, y in data.items()}
+            code = codes.get(name)
+            return code
+        except:
+            print("Country code not found.")
