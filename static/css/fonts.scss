@@ -10,7 +10,7 @@ $size_h6: 1.1rem;
 $size_general: 1rem;
 $size_small: 0.8rem;
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Ropa+Sans&family=Titillium+Web&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Ropa+Sans&family=Titillium+Web:wght@200;400;600&display=swap");
 
 $title: "Poppins", sans-serif;
 $subtitle: "Ropa Sans", sans-serif;
@@ -49,40 +49,56 @@ button {
 h1,
 .h1 {
 	font-family: $title;
+	font-weight: 600;
 	@include font_size($size_h1);
 }
 
 h2,
 .h2 {
 	font-family: $title;
+	font-weight: 600;
 	@include font_size($size_h2);
 }
 
 h3,
 .h3 {
 	font-family: $subtitle;
+	font-weight: 600;
 	@include font_size($size_h3);
 }
 
 h4,
 .h4 {
 	font-family: $subtitle;
+	font-weight: 600;
 	@include font_size($size_h4);
 }
 
 h5,
 .h5 {
 	font-family: $subtitle;
+	font-weight: 600;
 	@include font_size($size_h5);
 }
 
 h6,
 .h6 {
 	font-family: $subtitle;
+	font-weight: 600;
 	@include font_size($size_h6);
 }
 
 small,
 .small {
 	@include font_size($size_small);
+}
+
+.bold {
+	font-weight: 600;
+}
+.regular {
+	font-weight: 400;
+}
+.light {
+	font-weight: 200;
 }

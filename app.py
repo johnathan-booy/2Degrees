@@ -4,6 +4,7 @@ from functools import wraps
 from sqlalchemy import func, within_group, select
 from sqlalchemy.orm import Session
 from database import db, connect_db
+from news import News
 from exceptions import APIError, APINotFoundError, APIInvalidError
 from models.company import Company
 from models.exchange import Exchange
@@ -75,6 +76,7 @@ def list_objects(cls_, name, ranking, type):
         type, count=count, offset=offset, ranking=ranking)
 
     distribution = Distribution.query.filter_by(name=name).first()
+    print(distribution)
 
     page_count = ceil(cls_.num_of_rated() / count)
 
@@ -87,6 +89,17 @@ def list_objects(cls_, name, ranking, type):
                            page=page,
                            page_count=page_count,
                            offset=offset)
+
+
+@app.route("/companies/<int:id>")
+def company_details(id):
+    company = Company.query.get_or_404(id)
+    distribution = Distribution.query.filter_by(name='companies').first()
+    articles = News.get_articles(company.symbol)
+    return render_template("company.html",
+                           company=company,
+                           distribution=distribution,
+                           articles=articles)
 
 
 @ app.route('/api/companies/<symbol>', methods=['GET'])

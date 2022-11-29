@@ -37,41 +37,36 @@
 <!-- ---- -->
 <!-- LIST -->
 <!-- ---- -->
-<div class="list mb-5">
-
+<div class="block mb-5">
     <!-- ------ -->
     <!-- HEADER -->
     <!-- ------ -->
-    <div class="row">
-        <div class="list-item list-header">
+    <div class="row row-header">
+        {{ padding() }}
 
-            {{ padding() }}
-
-            <!-- ---------- -->
-            <!-- TABLE KEYS -->
-            <!-- ---------- -->
-            <div class="col-combined flex-row-center mt-3">
-                <div class="flex-col-center mx-2">
-                    <div class="key-best"></div>
-                    <div class="small">Best 10%</div>
-                </div>
-                <div class="flex-col-center mx-2">
-                    <div class="key-worst"></div>
-                    <div class="small">Worst 10%</div>
-                </div>
+        <!-- ---------- -->
+        <!-- TABLE KEYS -->
+        <!-- ---------- -->
+        <div class="col-combined flex-row-center mt-3">
+            <div class="flex-col-center mx-2">
+                <div class="key-best"></div>
+                <div class="small">Best 10%</div>
             </div>
-
-            <!-- ---- -->
-            <!-- ESGT -->
-            <!-- ---- -->
-            {{ esg_header("Environmental")}}
-            {{ esg_header("Social")}}
-            {{ esg_header("Governance")}}
-            {{ esg_header("Total")}}
-
-            {{ padding() }}
-
+            <div class="flex-col-center mx-2">
+                <div class="key-worst"></div>
+                <div class="small">Worst 10%</div>
+            </div>
         </div>
+
+        <!-- ---- -->
+        <!-- ESGT -->
+        <!-- ---- -->
+        {{ esg_header("Environmental")}}
+        {{ esg_header("Social")}}
+        {{ esg_header("Governance")}}
+        {{ esg_header("Total")}}
+
+        {{ padding() }}
     </div>
 
     <!-- ---------- -->
@@ -79,21 +74,21 @@
     <!-- ---------- -->
     {% for object in objects %}
     <a class="row row-link" href="/{{name}}/{{object.id}}">
-        <div class="list-item">
-            {{ padding() }}
+        {{ padding() }}
 
-            <!-- ---- -->
-            <!-- RANK -->
-            <!-- ---- -->
-            <div class="flex-col-center col-sm">
-                <span>{{loop.index + offset}}</span>
-            </div>
+        <!-- ---- -->
+        <!-- RANK -->
+        <!-- ---- -->
+        <div class="flex-col-center col-sm">
+            <span>{{loop.index + offset}}</span>
+        </div>
 
-            <!-- ---- -->
-            <!-- LOGO -->
-            <!-- ---- -->
-            <div class="flex-col-center col-md">
-                <div class="logo">
+        <!-- ---- -->
+        <!-- LOGO -->
+        <!-- ---- -->
+        <div class="flex-col-center col-md">
+            <div class="logo">
+                <div class="logo-inner">
                     {% if name == "companies" %}
                     <img src="{{object.logo_url}}" alt="{{object.name}} Logo">
                     {% elif name == "sectors" %}
@@ -103,48 +98,48 @@
                     {% endif %}
                 </div>
             </div>
-
-            <!-- ---- -->
-            <!-- NAME -->
-            <!-- ---- -->
-            <div class="flex-col-start col-lg">
-                {% if name == "companies" %}
-                <div class="h4">{{object.symbol}}</div>
-                <div class="small">{{object.name}}</div>
-                {% else %}
-                <div class="h5">{{object.name}}</div>
-                {% endif %}
-            </div>
-
-            <!-- ---- -->
-            <!-- ESGT -->
-            <!-- ---- -->
-            {{ esg_score(
-            "environmental",
-            object.environmental_score,
-            distribution.environmental_best,
-            distribution.environmental_worst) }}
-
-            {{ esg_score(
-            "social",
-            object.social_score,
-            distribution.social_best,
-            distribution.social_worst) }}
-
-            {{ esg_score(
-            "governance",
-            object.governance_score,
-            distribution.governance_best,
-            distribution.governance_worst) }}
-
-            {{ esg_score(
-            "total",
-            object.total_score,
-            distribution.total_best,
-            distribution.total_worst) }}
-
-            {{ padding() }}
         </div>
+
+        <!-- ---- -->
+        <!-- NAME -->
+        <!-- ---- -->
+        <div class="flex-col-start col-lg">
+            {% if name == "companies" %}
+            <div class="h4">{{object.symbol}}</div>
+            <div class="small">{{object.name}}</div>
+            {% else %}
+            <div class="h5">{{object.name}}</div>
+            {% endif %}
+        </div>
+
+        <!-- ---- -->
+        <!-- ESGT -->
+        <!-- ---- -->
+        {{ esg_score(
+        "environmental",
+        object.environmental_score,
+        distribution.environmental_best,
+        distribution.environmental_worst) }}
+
+        {{ esg_score(
+        "social",
+        object.social_score,
+        distribution.social_best,
+        distribution.social_worst) }}
+
+        {{ esg_score(
+        "governance",
+        object.governance_score,
+        distribution.governance_best,
+        distribution.governance_worst) }}
+
+        {{ esg_score(
+        "total",
+        object.total_score,
+        distribution.total_best,
+        distribution.total_worst) }}
+
+        {{ padding() }}
     </a>
     {% endfor %}
 
@@ -209,7 +204,7 @@
 <!-- --------- -->
 {% macro esg_score(type, score, best, worst) %}
 <div class="flex-col-center col-md">
-    <div class='{{type}} 
+    <div class='esg_score {{type}} 
     {% if score >= best %}
     best
     {% elif score <= worst %}

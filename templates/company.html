@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>{{ company.name.title() }} | 2Degrees</title>
+{% endblock %}
+
+{% block content %}
+<div class="flex-row-center">
+    <div class="logo">
+        <div class="logo-inner">
+            <img src="{{company.logo_url}}" alt="{{company.name}} Logo">
+        </div>
+    </div>
+    <span class="h2 bold pl-4">{{company.symbol}}</span>
+    <span class="h2 light px-2">|</span>
+    <span class="h4 light">{{company.name}}</span>
+</div>
+<div class="two-panels mt-5">
+    <!-- LEFT -->
+    <div class="left-panel">
+        {% if company.environmental_score %}
+        <div class="section">
+            <h4>ESG Ratings</h4>
+            <div class="block">
+                <div class="flex-row-space-around">
+
+                    {{ esg_score(
+                    "environmental",
+                    company.environmental_score,
+                    distribution.environmental_best,
+                    distribution.environmental_worst) }}
+
+                    {{ esg_score(
+                    "social",
+                    company.social_score,
+                    distribution.social_best,
+                    distribution.social_worst) }}
+
+                    {{ esg_score(
+                    "governance",
+                    company.governance_score,
+                    distribution.governance_best,
+                    distribution.governance_worst) }}
+
+                    {{ esg_score(
+                    "total",
+                    company.total_score,
+                    distribution.total_best,
+                    distribution.total_worst) }}
+
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="section">
+            <h4>Company Info</h4>
+            <div class="block">
+                <table class="company-details">
+                    <tbody>
+
+                        {% if company.exchange_symbol %}
+                        <tr>
+                            <td>Exchange</td>
+                            <td>{{company.exchange_symbol}}</td>
+                        </tr>
+                        {% endif %}
+
+                        {% if company.sector %}
+                        <tr>
+                            <td>Sector</td>
+                            <td><a href="/sectors/{{company.sector.id}}">{{company.sector.name}}</a></td>
+                        </tr>
+                        {% endif %}
+
+                        {% if company.city %}
+                        <tr>
+                            <td>City</td>
+                            <td>{{company.city.name}}</td>
+                        </tr>
+                        {% endif %}
+
+                        {% if company.region %}
+                        <tr>
+                            <td>Region</td>
+                            <td>{{company.region.name}}</td>
+                        </tr>
+                        {% endif %}
+
+                        {% if company.country %}
+                        <tr>
+                            <td>Country</td>
+                            <td><a href="/countries/{{company.country.id}}">{{company.country.name}}</a></td>
+                        </tr>
+                        {% endif %}
+
+                        {% if company.website %}
+                        <tr>
+                            <td>Website</td>
+                            <td>
+                                <a href="{{company.website}}">
+                                    {{company.website.replace("https://", "")}}
+                                </a>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {% if company.summary %}
+        <div class="section">
+            <h4>About {{company.name}}</h4>
+            <div class="block">
+                <div>
+                    {{company.summary}}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+        {% if articles %}
+        <div class="section">
+            <h4>News</h4>
+            <div class="block">
+                {% for article in articles %}
+                <a href="{{article.url}}" class="row row-link">
+                    <div class="flex-col-center col-sm">
+                        <div class="logo">
+                            <div class="logo-inner">
+                                <img src="{{article.thumbnail_url}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-col-start col-lg pl-2">
+                        <div class="h5">{{article.publisher}}</div>
+                        <div class="small">{{article.title}}</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+</div>
+
+{% endblock %}
+
+<!-- ------- -->
+<!-- PADDING -->
+<!-- ------- -->
+{% macro padding() %}
+<div class="col-padding"></div>
+{% endmacro %}
+
+<!-- --------- -->
+<!-- ESG SCORE -->
+<!-- --------- -->
+{% macro esg_score(type, score, best, worst) %}
+<div class="flex-col-center col-md">
+    <div class="small bold mb-1">{{type.title()}}</div>
+    <div class='esg_score {{type}} 
+    {% if score >= best %}
+    best
+    {% elif score <= worst %}
+    worst
+    {% endif %}'>
+        {{score}}
+    </div>
+</div>
+{% endmacro %}

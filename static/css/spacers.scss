@@ -6,6 +6,38 @@ $spacer_4: $spacer * 1.5;
 $spacer_5: $spacer * 3;
 
 // SPACERS Y
+.p-1 {
+	padding: $spacer_1 !important;
+}
+.p-2 {
+	padding: $spacer_2 !important;
+}
+.p-3 {
+	padding: $spacer_3 !important;
+}
+.p-4 {
+	padding: $spacer_4 !important;
+}
+.p-5 {
+	padding: $spacer_5 !important;
+}
+.m-1 {
+	margin: $spacer_1 !important;
+}
+.m-2 {
+	margin: $spacer_2 !important;
+}
+.m-3 {
+	margin: $spacer_3 !important;
+}
+.m-4 {
+	margin: $spacer_4 !important;
+}
+.m-5 {
+	margin: $spacer_5 !important;
+}
+
+// SPACERS Y
 .py-1 {
 	padding-top: $spacer_1 !important;
 	padding-bottom: $spacer_1 !important;
@@ -151,4 +183,68 @@ $spacer_5: $spacer * 3;
 }
 .mb-5 {
 	margin-bottom: $spacer_5 !important;
+}
+
+// SPACERS LEFT
+.pl-1 {
+	padding-left: $spacer_1 !important;
+}
+.pl-2 {
+	padding-left: $spacer_2 !important;
+}
+.pl-3 {
+	padding-left: $spacer_3 !important;
+}
+.pl-4 {
+	padding-left: $spacer_4 !important;
+}
+.pl-5 {
+	padding-left: $spacer_5 !important;
+}
+.ml-1 {
+	margin-left: $spacer_1 !important;
+}
+.ml-2 {
+	margin-left: $spacer_2 !important;
+}
+.ml-3 {
+	margin-left: $spacer_3 !important;
+}
+.ml-4 {
+	margin-left: $spacer_4 !important;
+}
+.ml-5 {
+	margin-left: $spacer_5 !important;
+}
+
+// SPACERS RIGHT
+.pr-1 {
+	padding-right: $spacer_1 !important;
+}
+.pr-2 {
+	padding-right: $spacer_2 !important;
+}
+.pr-3 {
+	padding-right: $spacer_3 !important;
+}
+.pr-4 {
+	padding-right: $spacer_4 !important;
+}
+.pr-5 {
+	padding-right: $spacer_5 !important;
+}
+.mr-1 {
+	margin-right: $spacer_1 !important;
+}
+.mr-2 {
+	margin-right: $spacer_2 !important;
+}
+.mr-3 {
+	margin-right: $spacer_3 !important;
+}
+.mr-4 {
+	margin-right: $spacer_4 !important;
+}
+.mr-5 {
+	margin-right: $spacer_5 !important;
 }
