@@ -228,3 +228,166 @@
 		}
 	}
 }
+
+.hero {
+	width: 100vw;
+	height: 600px;
+	background-size: cover;
+
+	@media (max-width: screens.$tablet) {
+		background-image: -webkit-image-set(
+			url("/static/images/homepage-header-MOBILE-SD.jpg") 1x,
+			url("/static/images/homepage-header-MOBILE-HD.jpg") 2x
+		);
+	}
+	@media (min-width: screens.$tablet) {
+		background-image: -webkit-image-set(
+			url("/static/images/homepage-header-SD.jpg") 1x,
+			url("/static/images/homepage-header-HD.jpg") 2x
+		);
+	}
+	@media (min-width: screens.$desktop) {
+		background-image: url("/static/images/homepage-header-4K.jpg");
+	}
+
+	.hero-inner {
+		background-image: linear-gradient(
+			to bottom,
+			rgba(colors.$accent-s4, 1),
+			rgba(colors.$accent-t1, 0),
+			rgba(colors.$accent-s4, 1)
+		);
+
+		width: 100%;
+		height: 100%;
+
+		@media (max-width: screens.$tablet) {
+			padding: 3%;
+		}
+		@media (min-width: screens.$tablet) {
+			padding: 6%;
+		}
+
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+
+		.hero-title {
+			color: colors.$light-text;
+			font-size: fonts.$size_h1;
+			font-family: fonts.$title;
+			font-weight: 600;
+			margin: 0.8rem;
+		}
+
+		.hero-subtitle {
+			color: colors.$light-text;
+			font-family: fonts.$subtitle;
+			font-weight: 400;
+			padding: 0.2rem 0.8rem;
+			margin: 0.2rem;
+			@media (max-width: screens.$tablet) {
+				font-size: fonts.$size_h4;
+			}
+			@media (min-width: screens.$tablet) {
+				font-size: fonts.$size_h3;
+			}
+		}
+
+		.hero-highlight {
+			background-color: colors.$accent;
+			font-weight: 600 !important;
+			color: colors.$neutral-t4 !important;
+			border-radius: 15px;
+		}
+	}
+}
+
+.panel-image-left {
+	background-image: linear-gradient(
+		to right,
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-t1, 1),
+		rgba(colors.$neutral-t2, 1),
+		rgba(colors.$neutral-t2, 1),
+		rgba(colors.$neutral-t2, 1)
+	);
+	color: colors.$dark-text;
+}
+.panel-image-right {
+	background-image: linear-gradient(
+		to right,
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-s1, 1),
+		rgba(colors.$neutral-t2, 1)
+	);
+	color: colors.$light-text;
+}
+
+.panel {
+	width: 100vw;
+	height: 600px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	border-top: 4px solid colors.$neutral-s4;
+
+	img {
+		object-fit: cover;
+		border-left: 4px solid colors.$neutral-s4;
+		border-right: 4px solid colors.$neutral-s4;
+	}
+
+	.panel-content {
+		max-width: 600px;
+	}
+
+	@media (max-width: screens.$tablet) {
+		.panel-content {
+			margin: 0rem 2rem;
+		}
+		img {
+			height: 100%;
+			width: 100px;
+		}
+	}
+	@media (min-width: screens.$tablet) {
+		.panel-content {
+			margin: 0rem 4rem;
+		}
+		img {
+			height: 120%;
+			width: 350px;
+			transform: rotate(10deg);
+		}
+	}
+	@media (min-width: screens.$laptop) {
+		.panel-content {
+			margin: 0rem 6rem;
+		}
+		img {
+			width: auto;
+			max-width: 500px;
+		}
+	}
+	@media (min-width: screens.$desktop) {
+		.panel-content {
+			margin: 0rem 10rem;
+		}
+	}
+}
+
+.panel-thin {
+	width: 100vw;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: colors.$light-text;
+	background-color: colors.$accent-s4;
+}

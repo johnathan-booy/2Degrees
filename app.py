@@ -65,7 +65,7 @@ def validate_list(f):
 @ app.route('/')
 def homepage():
     """Show homepage"""
-    return redirect('/companies/best/e')
+    return render_template("homepage.html")
 
 
 @app.route("/<name>/<ranking>/<type>")

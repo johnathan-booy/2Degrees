@@ -72,6 +72,8 @@ nav {
 		display: inline-block;
 		height: 100%;
 		transition: height 0.4s ease-in-out;
+		list-style: none;
+		margin-left: 0%;
 
 		@media (max-width: screens.$tablet) {
 			width: 100%;

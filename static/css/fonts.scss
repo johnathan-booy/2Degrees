@@ -102,3 +102,13 @@ small,
 .light {
 	font-weight: 200;
 }
+
+.text-light {
+	color: colors.$light-text;
+}
+.text-dark {
+	color: colors.$dark-text;
+}
+.text-accent {
+	color: colors.$accent-text;
+}

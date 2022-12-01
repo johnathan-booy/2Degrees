@@ -1,188 +1,196 @@
-{% extends 'base.html' %} {% block title %}
+{% extends 'base.html' %}
+
+<!-- TITLE -->
+{% block title %}
 <title>
 	{% if sector %}{{sector.name}}{% elif country %}{{country.name}}{% else
 	%}{{name.title()}}{% endif %} | 2Degrees
 </title>
-{% endblock %} {% block content %}
+{% endblock %}
 
-<!-- TITLE -->
-<div class="flex-col-center">
-	{% if sector or country%}
-	<div class="logo logo-lg">
-		<div class="logo-inner">
-			{% if sector %}
-			<i class="fa-solid {{sector.logo_class}} h4"></i>
-			{% elif country %} {{country_flag(country)}} {% endif %}
-		</div>
-	</div>
-	{% endif %}
-	<span class="h2 bold pl-3">
-		{% if sector %}{{sector.name}}{% elif country %}{{country.name}}{% else
-		%}{{name.title()}}{% endif %}
-	</span>
-</div>
-
-<!-- RANKING -->
-<div class="container mt-3 mb-2">
-	<div class="btn-label">Ranked by:</div>
-	<a
-		href="
-            {% if sector %}
-                {{ url_for('.list_objects', name=name, ranking='best', type=type, sector_id=sector.id) }}
-            {% elif country %}
-                {{ url_for('.list_objects', name=name, ranking='best', type=type, country_id=country.id) }}
-            {% else %}
-                {{ url_for('.list_objects', name=name, ranking='best', type=type) }}
-            {% endif %}
-            "
-		class="btn {% if ranking.lower() == 'best' %} btn-accent {% else %} btn-neutral {% endif %}"
-	>
-		Best
-	</a>
-	<a
-		href="
-    {% if sector %}
-    {{ url_for('.list_objects', name=name, ranking='worst', type=type, sector_id=sector.id) }}
-    {% elif country %}
-    {{ url_for('.list_objects', name=name, ranking='worst', type=type, country_id=country.id) }}
-    {% else %}
-    {{ url_for('.list_objects', name=name, ranking='worst', type=type) }}
-    {% endif %}
-    "
-		class="btn {% if ranking.lower() == 'worst' %} btn-accent {% else %} btn-neutral {% endif %}"
-	>
-		Worst
-	</a>
-</div>
-
-<!-- LIST -->
-<div class="block mb-5">
-	<!-- HEADER -->
-	<div class="row row-header">
-		{{ padding() }}
-
-		<!-- TABLE KEYS -->
-		<div class="col-combined flex-row-center mt-3">
-			<div class="flex-col-center mx-2">
-				<div class="key-best"></div>
-				<div class="small">Best 10%</div>
-			</div>
-			<div class="flex-col-center mx-2">
-				<div class="key-worst"></div>
-				<div class="small">Worst 10%</div>
+<!-- CONTENT -->
+{% block content %}
+<div class="main container py-5">
+	<!-- TITLE -->
+	<div class="flex-col-center">
+		{% if sector or country%}
+		<div class="logo logo-lg">
+			<div class="logo-inner">
+				{% if sector %}
+				<i class="fa-solid {{sector.logo_class}} h4"></i>
+				{% elif country %} {{country_flag(country)}} {% endif %}
 			</div>
 		</div>
-
-		<!-- Environmental -->
-		{{ esg_header("Environmental")}}
-		<!-- Social -->
-		{{ esg_header("Social")}}
-		<!-- Governance -->
-		{{ esg_header("Governance")}}
-		<!-- Total -->
-		{{ esg_header("Total")}} {{ padding() }}
+		{% endif %}
+		<span class="h2 bold pl-3">
+			{% if sector %}{{sector.name}}{% elif country %}{{country.name}}{% else
+			%}{{name.title()}}{% endif %}
+		</span>
 	</div>
 
-	<!-- LIST ITEMS -->
-	{% for object in objects %}
-	<a
-		class="row row-link"
-		href="
-            {% if name == 'companies' %}
-                {{ url_for('.company_details', id=object.id) }}
-            {% elif name == 'sectors' %}
-                {{ url_for('.list_objects', name='companies', ranking='best', type='T', sector_id=object.id) }}
-            {% elif name == 'countries' %}
-                {{ url_for('.list_objects', name='companies', ranking='best', type='T', country_id=object.id) }}
-            {% endif %}
+	<!-- RANKING -->
+	<div class="container mt-3 mb-2">
+		<div class="btn-label">Ranked by:</div>
+		<a
+			href="
+                {% if sector %}
+                    {{ url_for('.list_objects', name=name, ranking='best', type=type, sector_id=sector.id) }}
+                {% elif country %}
+                    {{ url_for('.list_objects', name=name, ranking='best', type=type, country_id=country.id) }}
+                {% else %}
+                    {{ url_for('.list_objects', name=name, ranking='best', type=type) }}
+                {% endif %}
+                "
+			class="btn {% if ranking.lower() == 'best' %} btn-accent {% else %} btn-neutral {% endif %}"
+		>
+			Best
+		</a>
+		<a
+			href="
+        {% if sector %}
+        {{ url_for('.list_objects', name=name, ranking='worst', type=type, sector_id=sector.id) }}
+        {% elif country %}
+        {{ url_for('.list_objects', name=name, ranking='worst', type=type, country_id=country.id) }}
+        {% else %}
+        {{ url_for('.list_objects', name=name, ranking='worst', type=type) }}
+        {% endif %}
         "
-	>
-		{{ padding() }}
+			class="btn {% if ranking.lower() == 'worst' %} btn-accent {% else %} btn-neutral {% endif %}"
+		>
+			Worst
+		</a>
+	</div>
 
-		<!-- RANK -->
-		<div class="flex-col-center col-sm">
-			<span>{{loop.index + offset}}</span>
-		</div>
+	<!-- LIST -->
+	<div class="block mb-5">
+		<!-- HEADER -->
+		<div class="row row-header">
+			{{ padding() }}
 
-		<!-- LOGO -->
-		<div class="flex-col-center col-md">
-			<div class="logo">
-				<div class="logo-inner">
-					{% if name == "companies" %}
-					<img src="{{object.logo_url}}" alt="{{object.name}} Logo" />
-					{% elif name == "sectors" %}
-					<i class="fa-solid {{object.logo_class}} h4"></i>
-					{% elif name == "countries" %} {{ country_flag(object) }} {% endif %}
+			<!-- TABLE KEYS -->
+			<div class="col-combined flex-row-center mt-3">
+				<div class="flex-col-center mx-2">
+					<div class="key-best"></div>
+					<div class="small">Best 10%</div>
+				</div>
+				<div class="flex-col-center mx-2">
+					<div class="key-worst"></div>
+					<div class="small">Worst 10%</div>
 				</div>
 			</div>
+
+			<!-- Environmental -->
+			{{ esg_header("Environmental")}}
+			<!-- Social -->
+			{{ esg_header("Social")}}
+			<!-- Governance -->
+			{{ esg_header("Governance")}}
+			<!-- Total -->
+			{{ esg_header("Total")}} {{ padding() }}
 		</div>
 
-		<!-- NAME -->
-		<div class="flex-col-start col-lg">
-			{% if name == "companies" %}
-			<div class="h4">{{object.symbol}}</div>
-			<div class="small">{{object.name}}</div>
-			{% else %}
-			<div class="h5">{{object.name}}</div>
-			{% endif %}
-		</div>
-
-		<!-- Environmental -->
-		{{ esg_score( "environmental", object.environmental_score,
-		distribution.environmental_best, distribution.environmental_worst) }}
-		<!-- Social -->
-		{{ esg_score( "social", object.social_score, distribution.social_best,
-		distribution.social_worst) }}
-		<!-- Governance -->
-		{{ esg_score( "governance", object.governance_score,
-		distribution.governance_best, distribution.governance_worst) }}
-		<!-- Total -->
-		{{ esg_score( "total", object.total_score, distribution.total_best,
-		distribution.total_worst) }}
-
-		<!-- Padding -->
-		{{ padding() }}
-	</a>
-	{% endfor %}
-
-	<!-- PAGINATION -->
-	<div class="row">
-		<div class="list-item">
-			{% if page > 0 %}
-			<a
-				href="
-            {% if sector %}
-            {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1), sector_id=sector.id) }}
-            {% elif country %}
-            {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1), country_id=country.id) }}
-            {% else %}
-            {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1)) }}
-            {% endif %}
+		<!-- LIST ITEMS -->
+		{% for object in objects %}
+		<a
+			class="row row-link"
+			href="
+                {% if name == 'companies' %}
+                    {{ url_for('.company_details', id=object.id) }}
+                {% elif name == 'sectors' %}
+                    {{ url_for('.list_objects', name='companies', ranking='best', type='T', sector_id=object.id) }}
+                {% elif name == 'countries' %}
+                    {{ url_for('.list_objects', name='companies', ranking='best', type='T', country_id=object.id) }}
+                {% endif %}
             "
-				class="btn btn-neutral"
-			>
-				<i class="fa-solid fa-arrow-left"></i>
-			</a>
-			{% endif %}
+		>
+			{{ padding() }}
 
-			<div class="btn-label">Page {{page + 1}} of {{page_count}}</div>
+			<!-- RANK -->
+			<div class="flex-col-center col-sm">
+				<span>{{loop.index + offset}}</span>
+			</div>
 
-			{% if page + 1 < page_count %}
-			<a
-				href="
-            {% if sector %}
-            {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1), sector_id=sector.id) }}
-            {% elif country %}
-            {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1), country_id=country.id) }}
-            {% else %}
-            {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1)) }}
-            {% endif %}
-            "
-				class="btn btn-neutral"
-			>
-				<i class="fa-solid fa-arrow-right"></i>
-			</a>
-			{% endif %}
+			<!-- LOGO -->
+			<div class="flex-col-center col-md">
+				<div class="logo">
+					<div class="logo-inner">
+						{% if name == "companies" %}
+						<img src="{{object.logo_url}}" alt="{{object.name}} Logo" />
+						{% elif name == "sectors" %}
+						<i class="fa-solid {{object.logo_class}} h4"></i>
+						{% elif name == "countries" %} {{ country_flag(object) }} {% endif
+						%}
+					</div>
+				</div>
+			</div>
+
+			<!-- NAME -->
+			<div class="flex-col-start col-lg">
+				{% if name == "companies" %}
+				<div class="h4">{{object.symbol}}</div>
+				<div class="small">{{object.name}}</div>
+				{% else %}
+				<div class="h5">{{object.name}}</div>
+				{% endif %}
+			</div>
+
+			<!-- Environmental -->
+			{{ esg_score( "environmental", object.environmental_score,
+			distribution.environmental_best, distribution.environmental_worst) }}
+			<!-- Social -->
+			{{ esg_score( "social", object.social_score, distribution.social_best,
+			distribution.social_worst) }}
+			<!-- Governance -->
+			{{ esg_score( "governance", object.governance_score,
+			distribution.governance_best, distribution.governance_worst) }}
+			<!-- Total -->
+			{{ esg_score( "total", object.total_score, distribution.total_best,
+			distribution.total_worst) }}
+
+			<!-- Padding -->
+			{{ padding() }}
+		</a>
+		{% endfor %}
+
+		<!-- PAGINATION -->
+		<div class="row">
+			<div class="list-item">
+				{% if page > 0 %}
+				<a
+					href="
+                {% if sector %}
+                {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1), sector_id=sector.id) }}
+                {% elif country %}
+                {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1), country_id=country.id) }}
+                {% else %}
+                {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1)) }}
+                {% endif %}
+                "
+					class="btn btn-neutral"
+				>
+					<i class="fa-solid fa-arrow-left"></i>
+				</a>
+				{% endif %}
+
+				<div class="btn-label">Page {{page + 1}} of {{page_count}}</div>
+
+				{% if page + 1 < page_count %}
+				<a
+					href="
+                {% if sector %}
+                {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1), sector_id=sector.id) }}
+                {% elif country %}
+                {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1), country_id=country.id) }}
+                {% else %}
+                {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1)) }}
+                {% endif %}
+                "
+					class="btn btn-neutral"
+				>
+					<i class="fa-solid fa-arrow-right"></i>
+				</a>
+				{% endif %}
+			</div>
 		</div>
 	</div>
 </div>

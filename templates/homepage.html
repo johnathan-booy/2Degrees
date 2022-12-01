@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>2Degrees Investing</title>
+{% endblock %}
+
+{% block content %}
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-inner">
+        <div class="hero-title">Invest in the future</div>
+        <div class="hero-subtitle hero-highlight">Environmental, Social and Governance</div>
+        <div class="hero-subtitle">insight into the companies you support.</div>
+    </div>
+</div>
+<div class="panel-thin">
+    <div class="h2">What is ESG?</div>
+</div>
+<!-- ENVIRONMENTAL -->
+<div class="panel panel-image-left">
+    <img src="/static/images/environmental-SD.jpg" srcset="/static/images/environmental-HD.jpg 2x" alt="Environmental">
+    <div class="panel-content">
+        <div class="h2">Environmental</div>
+        <div class="my-3 mx-1">Environmental scores portray how an organization considers the natural environment.
+            Important factors include:
+            <ul class="mt-2">
+                <li>Climate change</li>
+                <li>Deforestation</li>
+                <li>Waste management and polution</li>
+                <li>Natural resource depletion</li>
+                <li>Greenhouse gas emissions</li>
+            </ul>
+        </div>
+        <a class="btn btn-accent" href="/companies/best/E"><span class="bold">Best</span> Companies</a>
+    </div>
+</div>
+<!-- SOCIAL -->
+<div class="panel panel-image-right">
+    <div class="panel-content">
+        <div class="h2">Social</div>
+        <div class="my-3 mx-1">Social scores address how the organization treats people and concentrates on:
+            <ul class="mt-2">
+                <li>Diversity, equity, and inclusion</li>
+                <li>Human rights, including child labor and slavery</li>
+                <li>Health and safety</li>
+                <li>Labor standards</li>
+                <li>Community engagement</li>
+            </ul>
+        </div>
+        <a class="btn btn-accent" href="/companies/best/S"><span class="bold">Best</span> Companies</a>
+    </div>
+    <img src="/static/images/social-SD.jpg" srcset="/static/images/social-HD.jpg 2x" alt="Social">
+</div>
+<!-- GOVERNANCE -->
+<div class="panel panel-image-left">
+    <img src="/static/images/governance-SD.jpg" srcset="/static/images/governance-HD.jpg 2x" alt="Governance">
+    <div class="panel-content">
+        <div class="h2">Governance</div>
+        <div class="my-3 mx-1">Governance scores examine how an organization polices itself, and how it is governed and
+            focuses on:
+            <ul class="mt-2">
+                <li>Company leadership</li>
+                <li>Corruption and bribery</li>
+                <li>Donations and political lobying</li>
+                <li>Executive remunerations</li>
+                <li>Board diversity and structure</li>
+            </ul>
+        </div>
+        <a class="btn btn-accent" href="/companies/best/G"><span class="bold">Best</span> Companies</a>
+    </div>
+</div>
+{% endblock %}
