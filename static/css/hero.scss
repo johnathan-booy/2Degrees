@@ -1,0 +1,99 @@
+@use "colors";
+@use "fonts";
+@use "navbar";
+@use "screens";
+
+.hero-homepage {
+	@media (max-width: screens.$tablet) {
+		background-image: -webkit-image-set(
+			url("/static/images/homepage-header-MOBILE-SD.jpg") 1x,
+			url("/static/images/homepage-header-MOBILE-HD.jpg") 2x
+		);
+	}
+	@media (min-width: screens.$tablet) {
+		background-image: -webkit-image-set(
+			url("/static/images/homepage-header-SD.jpg") 1x,
+			url("/static/images/homepage-header-HD.jpg") 2x
+		);
+	}
+	@media (min-width: screens.$desktop) {
+		background-image: url("/static/images/homepage-header-4K.jpg");
+	}
+}
+.hero-404 {
+	@media (max-width: screens.$tablet) {
+		background-image: -webkit-image-set(
+			url("/static/images/404-MOBILE-SD.jpg") 1x,
+			url("/static/images/404-MOBILE-HD.jpg") 2x
+		);
+	}
+	@media (min-width: screens.$tablet) {
+		background-image: -webkit-image-set(
+			url("/static/images/404-SD.jpg") 1x,
+			url("/static/images/404-HD.jpg") 2x
+		);
+	}
+	@media (min-width: screens.$desktop) {
+		background-image: url("/static/images/404-4K.jpg");
+	}
+}
+
+.hero {
+	height: calc(100vh - navbar.$height);
+	width: 100vw;
+	background-size: cover;
+
+	.hero-inner {
+		background-image: linear-gradient(
+			to bottom,
+			rgba(colors.$accent-s4, 1),
+			rgba(colors.$accent-t1, 0),
+			rgba(colors.$accent-s4, 1)
+		);
+
+		width: 100%;
+		height: 100%;
+
+		@media (max-width: screens.$tablet) {
+			padding: 3%;
+		}
+		@media (min-width: screens.$tablet) {
+			padding: 6%;
+		}
+
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+
+		.hero-title {
+			color: colors.$light-text;
+			font-size: fonts.$size_h1;
+			font-family: fonts.$title;
+			font-weight: 600;
+			margin: 0.8rem;
+		}
+
+		.hero-subtitle {
+			color: colors.$light-text;
+			font-family: fonts.$subtitle;
+			font-weight: 400;
+			padding: 0.2rem 0.8rem;
+			margin: 0.2rem;
+			@media (max-width: screens.$tablet) {
+				font-size: fonts.$size_h4;
+			}
+			@media (min-width: screens.$tablet) {
+				font-size: fonts.$size_h3;
+			}
+		}
+
+		.hero-highlight {
+			background-color: colors.$accent;
+			font-weight: 600 !important;
+			color: colors.$neutral-t4 !important;
+			border-radius: 24px;
+		}
+	}
+}

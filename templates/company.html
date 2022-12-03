@@ -5,7 +5,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="main container py-5">
+<div class="main container py-4">
+    {% if g.user %}
+    {% if company in g.user.companies %}
+    <form class="mylist-form pb-2" action="{{url_for('.remove_mylist', id=company.id)}}" method="POST">
+        <button class="mylist-btn">
+            <i class="fa-solid fa-minus"></i>
+        </button>
+        Remove from list
+    </form>
+    {% else %}
+    <form class="mylist-form pb-2" action="{{url_for('.add_mylist', id=company.id)}}" method="POST">
+        <button class="mylist-btn">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+        Add to list
+    </form>
+    {% endif %}
+    {% endif %}
+
+    {% include "alerts.html" %}
+
 
     <div class="flex-col-center">
         <div class="logo logo-lg">

@@ -21,11 +21,19 @@
             </div>
         </div>
         <ul id="nav-list">
-            <li class="nav-item"><a href="/companies/best/t">Companies</a></li>
-            <li class="nav-item"><a href="/sectors/best/t">Sectors</a></li>
-            <li class="nav-item"><a href="/countries/best/t">Countries</a></li>
+            <li><a href="/companies/best/T">Companies</a></li>
+            <li><a href="/sectors/best/T">Sectors</a></li>
+            <li><a href="/countries/best/T">Countries</a></li>
+            {% if g.user %}
+            <li class="push-right"><a href="/mylist/best/T">My List</a></li>
+            <li><a href="/logout">Log out</a></li>
+            {% else %}
+            <li class="push-right"><a href="/signup">Sign up</a></li>
+            <li><a href="/login">Log in</a></li>
+            {% endif %}
         </ul>
     </nav>
+
     {% block content %}{% endblock %}
 
     <!-- AXIOS -->
@@ -33,6 +41,7 @@
 
     <!-- SCRIPTS -->
     <script src="/static/js/navbar.js"></script>
+    <script src="/static/js/follow.js"></script>
 
     {% block script %}{%endblock%}
 </body>

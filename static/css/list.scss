@@ -1,0 +1,187 @@
+@use "colors";
+@use "screens";
+
+.row-link {
+	.mylist-form {
+		display: none;
+	}
+	.hide-on-hover {
+		display: block;
+	}
+}
+
+.row-link:hover {
+	.mylist-form {
+		display: block;
+	}
+	.hide-on-hover {
+		display: none;
+	}
+}
+
+.row-link {
+	cursor: pointer;
+}
+.row-link:hover {
+	background: colors.$neutral-t3;
+}
+
+.row:last-child {
+	border: none;
+}
+
+.row-accent {
+	background-color: rgba(colors.$accent-t4, 0.4) !important;
+}
+.row-accent:hover {
+	background-color: rgba(colors.$accent-t4, 0.8) !important;
+}
+
+.row {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	min-height: 80px;
+	border-bottom: 1px solid colors.$neutral-t3;
+	background: transparent;
+	text-decoration: none;
+	color: colors.$neutral-s3;
+
+	.col-padding {
+		flex-basis: 30px;
+		flex-grow: 1.5;
+		flex-shrink: 1;
+	}
+
+	.col-sm {
+		flex-basis: 50px;
+		flex-grow: 0;
+		flex-shrink: 1;
+	}
+	.col-md {
+		flex-basis: 150px;
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+	.col-lg {
+		flex-basis: 200px;
+		flex-grow: 1;
+		flex-shrink: 0.75;
+	}
+	.col-xl {
+		flex-basis: 400px;
+		flex-grow: 1;
+		flex-shrink: 0.5;
+	}
+	.col-combined {
+		flex-basis: 400px;
+		flex-grow: 1.2;
+		flex-shrink: 0.82;
+	}
+}
+
+@mixin circle($size) {
+	border-radius: 50%;
+	overflow: hidden;
+	box-shadow: colors.$neutral-t2 0px 2px 8px 0px;
+	width: $size;
+	height: $size;
+}
+
+@mixin flex-circle($mobile-size, $tablet-size, $laptop-size, $desktop-size) {
+	@include circle($mobile-size);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: colors.$neutral-t4;
+
+	@media (min-width: screens.$tablet) {
+		width: $tablet-size;
+		height: $tablet-size;
+	}
+	@media (min-width: screens.$laptop) {
+		width: $laptop-size;
+		height: $laptop-size;
+	}
+	@media (min-width: screens.$desktop) {
+		width: $desktop-size;
+		height: $desktop-size;
+	}
+}
+
+.logo {
+	@include flex-circle(2.6rem, 3.4rem, 3.7rem, 4rem);
+
+	.logo-inner {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 80%;
+		height: 80%;
+		border-radius: 50%;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			margin: auto;
+			object-fit: contain;
+		}
+	}
+}
+
+.logo-lg {
+	width: 4rem !important;
+	height: 4rem !important;
+}
+
+.esg_score {
+	@include flex-circle(2.3rem, 2.8rem, 3.1rem, 3.5rem);
+}
+
+.best {
+	background-color: colors.$success-t2 !important;
+}
+
+.worst {
+	background-color: colors.$danger-t2 !important;
+}
+
+.key-best {
+	@include circle(1rem);
+	background-color: colors.$success-t2;
+}
+.key-worst {
+	@include circle(1rem);
+	background-color: colors.$danger-t2;
+}
+
+.mylist-form {
+	margin: 0;
+	padding: 0;
+	height: 26px;
+}
+
+.mylist-btn {
+	cursor: pointer;
+	width: 25px;
+	height: 25px;
+
+	border: 2px solid colors.$neutral-t2;
+	border-radius: 100%;
+
+	color: colors.$neutral-t1;
+	background-color: #fff;
+	box-shadow: colors.$neutral-t3 0px 4px 16px 0px;
+
+	font-size: 0.9rem;
+	transition: all 0.2s ease-in-out;
+}
+
+.mylist-btn:hover {
+	width: 26px;
+	height: 26px;
+	color: colors.$neutral;
+	border-color: colors.$neutral-t1;
+}

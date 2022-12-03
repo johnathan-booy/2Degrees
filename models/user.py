@@ -1,5 +1,8 @@
+from flask_bcrypt import Bcrypt
 from database import db
 from models.users_companies import users_companies
+
+bcrypt = Bcrypt()
 
 
 class User(db.Model):
@@ -26,6 +29,7 @@ class User(db.Model):
     )
     email = db.Column(
         db.String(),
+        unique=True,
         nullable=False
     )
     first_name = db.Column(
@@ -39,3 +43,38 @@ class User(db.Model):
         secondary=users_companies,
         backref="users"
     )
+
+    @classmethod
+    def signup(cls, username, password, email, first_name=None, last_name=None):
+        """Sign up user.
+
+        Hashes password with bcrypt and creates a user
+        """
+
+        hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
+
+        user = cls(
+            username=username,
+            password=hashed_pwd,
+            email=email,
+            first_name=first_name,
+            last_name=last_name
+        )
+
+        if not user:
+            return
+
+        return user
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """Find user with `username` and `password`. """
+
+        user = cls.query.filter_by(username=username).first()
+
+        if user:
+            is_auth = bcrypt.check_password_hash(user.password, password)
+            if is_auth:
+                return user
+
+        return False

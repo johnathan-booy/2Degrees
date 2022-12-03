@@ -5,11 +5,13 @@
 
 @import "fonts.scss";
 
+$height: 80px;
+
 nav {
 	position: relative;
 	background-color: colors.$accent-s4;
 	color: colors.$light-text;
-	height: 80px;
+	height: $height;
 	display: flex;
 	@media (max-width: screens.$tablet) {
 		flex-direction: column;
@@ -68,16 +70,33 @@ nav {
 			display: none;
 		}
 	}
+
 	#nav-list {
-		display: inline-block;
+		flex-grow: 1;
+		flex-shrink: 1;
 		height: 100%;
 		transition: height 0.4s ease-in-out;
 		list-style: none;
 		margin-left: 0%;
+		margin-right: 2%;
+
+		.nav-spacer {
+			flex-grow: 1;
+			flex-shrink: 1;
+		}
 
 		@media (max-width: screens.$tablet) {
+			display: inline-block;
 			width: 100%;
 			background-color: colors.$accent-s3;
+		}
+		@media (min-width: screens.$tablet) {
+			display: flex;
+			flex-direction: row;
+			justify-content: start;
+		}
+		.push-right {
+			margin-left: auto;
 		}
 
 		li {

@@ -1,0 +1,61 @@
+@use "colors";
+@use "screens";
+
+.company-details {
+	width: 100%;
+	tr {
+		td:first-child {
+			text-align: start;
+			font-weight: 600;
+		}
+		td:last-child {
+			text-align: end;
+			font-weight: 200;
+		}
+	}
+}
+
+.two-panels {
+	display: flex;
+	justify-content: center;
+	@media (max-width: screens.$tablet) {
+		flex-direction: column;
+	}
+	@media (min-width: screens.$tablet) {
+		flex-direction: row;
+	}
+	width: 100%;
+	.left-panel {
+		@media (max-width: screens.$tablet) {
+			width: 100%;
+		}
+		@media (min-width: screens.$tablet) {
+			width: 57.5%;
+			margin-right: 2.5%;
+		}
+	}
+	.right-panel {
+		@media (max-width: screens.$tablet) {
+			width: 100%;
+		}
+		@media (min-width: screens.$tablet) {
+			width: 37.5%;
+			margin-left: 2.5%;
+		}
+	}
+
+	.section {
+		margin-bottom: 2rem;
+		h4 {
+			margin: 0 0 0.8rem 0.8rem;
+		}
+		.block {
+			padding: 1.5rem;
+		}
+
+		a:not(.row) {
+			color: colors.$accent;
+			font-weight: 600;
+		}
+	}
+}

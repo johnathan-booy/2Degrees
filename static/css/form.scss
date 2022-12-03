@@ -1,0 +1,32 @@
+@use "colors";
+
+.user-form {
+	max-width: 600px;
+	margin: auto;
+	margin-top: 2rem;
+	button {
+		border: none;
+	}
+
+	.form-control {
+		display: flex;
+		height: 44px;
+		border: 1px solid transparent;
+		border-radius: 24px;
+		box-shadow: 0 2px 5px 1px colors.$neutral-t1;
+		margin-bottom: 10px;
+		padding: 24px;
+		width: 100%;
+	}
+
+	.form-control:focus {
+		outline: colors.$accent solid 2px;
+	}
+
+	.form-control:valid {
+		background-color: colors.$accent-t4;
+	}
+	.form-control:invalid {
+		background-color: colors.$neutral-t4;
+	}
+}

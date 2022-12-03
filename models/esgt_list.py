@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 from database import db
+from models.user import User
 
 
 class ESGTList(object):
@@ -19,7 +20,7 @@ class ESGTList(object):
     )
 
     @classmethod
-    def ranked(cls, ranking: str, type: str, sector_id: int, country_id: int, count: int, offset: int) -> list:
+    def ranked(cls, ranking: str, type: str, user_id: int, sector_id: int, country_id: int, count: int, offset: int) -> list:
         """Return objects ranked best or worst based on ESGT ratings"""
 
         if ranking != "worst" and ranking != "best":
@@ -39,8 +40,10 @@ class ESGTList(object):
                 q1 = cls.total_score
                 q2 = cls.environmental_score
 
-        query = (cls.query
-                 .filter(q1 != None))
+        query = cls.query
+
+        if user_id:
+            query = query.join(User.companies).filter(User.id == user_id)
 
         if sector_id:
             query = query.filter(cls.sector_id == sector_id)
@@ -49,6 +52,7 @@ class ESGTList(object):
             query = query.filter(cls.country_id == country_id)
 
         objects = (query
+                   .filter(q1 != None)
                    .order_by(
                        q1.desc() if ranking == "best" else q1,
                        q2.desc() if ranking == "best" else q2)
@@ -60,10 +64,11 @@ class ESGTList(object):
         return objects
 
     @ classmethod
-    def num_of_rated(cls, sector_id: int, country_id: int) -> int:
-        query = (cls
-                 .query
-                 .filter(cls.total_score != None,))
+    def num_of_rated(cls, user_id: int, sector_id: int, country_id: int) -> int:
+        query = cls.query
+
+        if user_id:
+            query = query.join(User.companies).filter(User.id == user_id)
 
         if sector_id:
             query = query.filter(cls.sector_id == sector_id)
@@ -71,4 +76,4 @@ class ESGTList(object):
         if country_id:
             query = query.filter(cls.country_id == country_id)
 
-        return (query.count())
+        return (query.filter(cls.total_score != None).count())

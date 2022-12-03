@@ -1,0 +1,23 @@
+@use "colors";
+
+.alert {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 44px;
+	width: fit-content;
+	margin-bottom: 10px;
+	padding: 24px;
+	border: 1px solid transparent;
+	border-radius: 24px;
+	color: colors.$light-text;
+}
+
+.alert-success {
+	background-color: colors.$success;
+	box-shadow: 0px 4px 16px 0px colors.$success;
+}
+.alert-danger {
+	background-color: colors.$danger;
+	box-shadow: 0px 4px 16px 0px colors.$danger;
+}

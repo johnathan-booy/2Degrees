@@ -3,14 +3,14 @@
 <!-- TITLE -->
 {% block title %}
 <title>
-	{% if sector %}{{sector.name}}{% elif country %}{{country.name}}{% else
-	%}{{name.title()}}{% endif %} | 2Degrees
+	{{title()}} | 2Degrees
 </title>
 {% endblock %}
 
 <!-- CONTENT -->
 {% block content %}
 <div class="main container py-5">
+	{% include "alerts.html" %}
 	<!-- TITLE -->
 	<div class="flex-col-center">
 		{% if sector or country%}
@@ -23,16 +23,14 @@
 		</div>
 		{% endif %}
 		<span class="h2 bold pl-3">
-			{% if sector %}{{sector.name}}{% elif country %}{{country.name}}{% else
-			%}{{name.title()}}{% endif %}
+			{{ title() }}
 		</span>
 	</div>
 
 	<!-- RANKING -->
 	<div class="container mt-3 mb-2">
 		<div class="btn-label">Ranked by:</div>
-		<a
-			href="
+		<a href="
                 {% if sector %}
                     {{ url_for('.list_objects', name=name, ranking='best', type=type, sector_id=sector.id) }}
                 {% elif country %}
@@ -40,23 +38,18 @@
                 {% else %}
                     {{ url_for('.list_objects', name=name, ranking='best', type=type) }}
                 {% endif %}
-                "
-			class="btn {% if ranking.lower() == 'best' %} btn-accent {% else %} btn-neutral {% endif %}"
-		>
+                " class="btn {% if ranking.lower() == 'best' %} btn-accent {% else %} btn-neutral {% endif %}">
 			Best
 		</a>
-		<a
-			href="
-        {% if sector %}
-        {{ url_for('.list_objects', name=name, ranking='worst', type=type, sector_id=sector.id) }}
-        {% elif country %}
-        {{ url_for('.list_objects', name=name, ranking='worst', type=type, country_id=country.id) }}
-        {% else %}
-        {{ url_for('.list_objects', name=name, ranking='worst', type=type) }}
-        {% endif %}
-        "
-			class="btn {% if ranking.lower() == 'worst' %} btn-accent {% else %} btn-neutral {% endif %}"
-		>
+		<a href="
+				{% if sector %}
+				{{ url_for('.list_objects', name=name, ranking='worst', type=type, sector_id=sector.id) }}
+				{% elif country %}
+				{{ url_for('.list_objects', name=name, ranking='worst', type=type, country_id=country.id) }}
+				{% else %}
+				{{ url_for('.list_objects', name=name, ranking='worst', type=type) }}
+				{% endif %}
+				" class="btn {% if ranking.lower() == 'worst' %} btn-accent {% else %} btn-neutral {% endif %}">
 			Worst
 		</a>
 	</div>
@@ -91,30 +84,53 @@
 
 		<!-- LIST ITEMS -->
 		{% for object in objects %}
-		<a
-			class="row row-link"
-			href="
-                {% if name == 'companies' %}
+		<a class="
+		row row-link
+		{% if g.user and name in ['companies', 'mylist']%}
+		{% if object in g.user.companies %}
+		row-accent
+		{% endif %}
+		{% endif %}
+		" href="
+                {% if name in ['companies', 'mylist'] %}
                     {{ url_for('.company_details', id=object.id) }}
                 {% elif name == 'sectors' %}
                     {{ url_for('.list_objects', name='companies', ranking='best', type='T', sector_id=object.id) }}
                 {% elif name == 'countries' %}
                     {{ url_for('.list_objects', name='companies', ranking='best', type='T', country_id=object.id) }}
                 {% endif %}
-            "
-		>
+            ">
 			{{ padding() }}
 
 			<!-- RANK -->
-			<div class="flex-col-center col-sm">
-				<span>{{loop.index + offset}}</span>
+			<div class="flex-row-space-around col-sm">
+				{% if g.user and name in ["companies", "mylist"]%}
+				{% if object in g.user.companies %}
+				<form class="mylist-form" action="{{url_for('.remove_mylist', id=object.id)}}" method="POST">
+					<button class="mylist-btn">
+						<i class="fa-solid fa-minus"></i>
+					</button>
+				</form>
+				{% else %}
+				<form class="mylist-form" action="{{url_for('.add_mylist', id=object.id)}}" method="POST">
+					<button class="mylist-btn">
+						<i class="fa-solid fa-plus"></i>
+					</button>
+				</form>
+				{% endif %}
+				{% endif %}
+				<span class="
+				{% if name in ['companies', 'mylist'] and g.user %}
+				hide-on-hover
+				{% endif %}
+				">{{loop.index + offset}}</span>
 			</div>
 
 			<!-- LOGO -->
 			<div class="flex-col-center col-md">
 				<div class="logo">
 					<div class="logo-inner">
-						{% if name == "companies" %}
+						{% if name in ["companies", "mylist"] %}
 						<img src="{{object.logo_url}}" alt="{{object.name}} Logo" />
 						{% elif name == "sectors" %}
 						<i class="fa-solid {{object.logo_class}} h4"></i>
@@ -126,7 +142,7 @@
 
 			<!-- NAME -->
 			<div class="flex-col-start col-lg">
-				{% if name == "companies" %}
+				{% if name in ["companies", "mylist"] %}
 				<div class="h4">{{object.symbol}}</div>
 				<div class="small">{{object.name}}</div>
 				{% else %}
@@ -155,9 +171,9 @@
 		<!-- PAGINATION -->
 		<div class="row">
 			<div class="list-item">
+				{% if page_count != 0 %}
 				{% if page > 0 %}
-				<a
-					href="
+				<a href="
                 {% if sector %}
                 {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1), sector_id=sector.id) }}
                 {% elif country %}
@@ -165,18 +181,14 @@
                 {% else %}
                 {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page-1)) }}
                 {% endif %}
-                "
-					class="btn btn-neutral"
-				>
+                " class="btn btn-neutral">
 					<i class="fa-solid fa-arrow-left"></i>
 				</a>
 				{% endif %}
 
 				<div class="btn-label">Page {{page + 1}} of {{page_count}}</div>
 
-				{% if page + 1 < page_count %}
-				<a
-					href="
+				{% if page + 1 < page_count %} <a href="
                 {% if sector %}
                 {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1), sector_id=sector.id) }}
                 {% elif country %}
@@ -184,12 +196,13 @@
                 {% else %}
                 {{ url_for('.list_objects', name=name, ranking=ranking, type=type, page=(page+1)) }}
                 {% endif %}
-                "
-					class="btn btn-neutral"
-				>
+                " class="btn btn-neutral">
 					<i class="fa-solid fa-arrow-right"></i>
-				</a>
-				{% endif %}
+					</a>
+					{% endif %}
+					{% else %}
+					<span class="text-muted">Nothing to show!</span>
+					{% endif %}
 			</div>
 		</div>
 	</div>
@@ -198,22 +211,26 @@
 
 <!-- MACROS -->
 
+{% macro title() %}
+{% if sector %}{{sector.name}}{% elif country %}{{country.name}}{% elif name=="mylist" %}My List{% else
+%}{{name.title()}}{% endif %}
+{% endmacro %}
+
 {% macro esg_header(rating)%}
 <div class="flex-col-center col-md">
 	<span class="hide-sm"> {{rating}} </span>
 	<span class="hide-lg"> {{rating[0]}} </span>
-	<a
-		class="btn-sm {% if type.upper() == rating[0] %} btn-accent {% else %} btn-neutral {% endif %}"
-		href="
-    {% if sector %}
+	<a class="btn-sm {% if type.upper() == rating[0] %} btn-accent {% else %} btn-neutral {% endif %}" href="
+    {% if user_id %}
+    {{ url_for('.list_objects', name=name, ranking=ranking, type=rating[0], user_id=user_id) }}
+    {% elif sector %}
     {{ url_for('.list_objects', name=name, ranking=ranking, type=rating[0], sector_id=sector.id) }}
     {% elif country %}
     {{ url_for('.list_objects', name=name, ranking=ranking, type=rating[0], country_id=country.id) }}
     {% else %}
     {{ url_for('.list_objects', name=name, ranking=ranking, type=rating[0]) }}
     {% endif %}
-    "
-	>
+    ">
 		<i class="fa-solid fa-sort"></i>
 	</a>
 </div>
@@ -224,14 +241,12 @@
 <!-- ESG SCORE -->
 {% macro esg_score(type, score, best, worst) %}
 <div class="flex-col-center col-md">
-	<div
-		class="esg_score {{type}} 
+	<div class="esg_score {{type}} 
     {% if score >= best %}
     best
     {% elif score <= worst %}
     worst
-    {% endif %}"
-	>
+    {% endif %}">
 		{{score}}
 	</div>
 </div>
@@ -239,13 +254,8 @@
 
 <!-- COUNTRY FLAG -->
 {% macro country_flag(country) %}
-<img
-	src="https://flagcdn.com/h40/{{country.code}}.png"
-	srcset="
+<img src="https://flagcdn.com/h40/{{country.code}}.png" srcset="
 		https://flagcdn.com/h80/{{country.code}}.png  2x,
 		https://flagcdn.com/h120/{{country.code}}.png 3x
-	"
-	width="40"
-	alt="{{country.name}}"
-/>
+	" width="40" alt="{{country.name}}" />
 {% endmacro %}

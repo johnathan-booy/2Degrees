@@ -1,0 +1,89 @@
+@use "colors";
+@use "screens";
+
+.panel-image-left {
+	background-image: linear-gradient(
+		to right,
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-t1, 1),
+		rgba(colors.$neutral-t2, 1),
+		rgba(colors.$neutral-t2, 1),
+		rgba(colors.$neutral-t2, 1)
+	);
+	color: colors.$dark-text;
+}
+.panel-image-right {
+	background-image: linear-gradient(
+		to right,
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-s2, 1),
+		rgba(colors.$neutral-s1, 1),
+		rgba(colors.$neutral-t2, 1)
+	);
+	color: colors.$light-text;
+}
+
+.panel {
+	width: 100vw;
+	height: 600px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	border-top: 4px solid colors.$accent-s4;
+
+	img {
+		object-fit: cover;
+		border-left: 4px solid colors.$accent-s4;
+		border-right: 4px solid colors.$accent-s4;
+	}
+
+	.panel-content {
+		max-width: 600px;
+	}
+
+	@media (max-width: screens.$tablet) {
+		.panel-content {
+			margin: 0rem 2rem;
+		}
+		img {
+			height: 100%;
+			width: 100px;
+		}
+	}
+	@media (min-width: screens.$tablet) {
+		.panel-content {
+			margin: 0rem 4rem;
+		}
+		img {
+			height: 120%;
+			width: 350px;
+			transform: rotate(10deg);
+		}
+	}
+	@media (min-width: screens.$laptop) {
+		.panel-content {
+			margin: 0rem 6rem;
+		}
+		img {
+			width: auto;
+			max-width: 500px;
+		}
+	}
+	@media (min-width: screens.$desktop) {
+		.panel-content {
+			margin: 0rem 10rem;
+		}
+	}
+}
+
+.panel-thin {
+	width: 100vw;
+	height: 100px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: colors.$light-text;
+	background-color: colors.$accent-s4;
+}
