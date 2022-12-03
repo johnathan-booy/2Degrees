@@ -1,19 +1,5 @@
-"""
-Updates ESG Ratings from ESG Enterprise API
-
-Should be called as a class constructor method.
-
-    esg = ESGRatings.populate()
-
-Return object will include:
-
-    esg.errors -> Logged errors (often 429 for TooManyRequests)
-    esg.companies -> All companies initially included in the update
-    esg.updated -> Companies that were succesfully updated
-"""
-
 import requests
-from numpy import average
+from numpy import average, percentile
 from api_tokens import ESG_ENTERPRISE_TOKEN
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import or_
@@ -23,77 +9,114 @@ from models.company import Company
 from models.exchange import Exchange
 from models.sector import Sector
 from models.country import Country
+from models.distribution import Distribution
 from helpers.strip_date import strip_date
 from helpers.divide_list import divide_list
 
 
 class ESGRatings():
-    """Queries outdated ESG ratings and updates from ESG Enterprise API"""
+    """
+    Updates ESG Ratings from ESG Enterprise API
+
+    Should be called as a class constructor method.
+
+        `esg = ESGRatings.populate()`
+
+    Return object will include:
+
+        `esg.errors` -> Logged errors (often 429 for TooManyRequests)
+
+        `esg.companies` -> All companies initially included in the update
+
+        `esg.updated` -> Companies that were succesfully updated
+
+    """
 
     def __init__(self) -> None:
         # Find valid date range for ESG ratings
         self.datetime_now = datetime.now(timezone.utc)
         self.datetime_oldest = self.datetime_now - timedelta(days=28)
-        self.companies = self.get_companies()
-        self.updated = []
-        self.errors = []
-        self.exchange_symbols = self.get_exchange_symbols()
 
+        # Get companies with missing or expired esg ratings
+        self.companies = self.get_companies()
+
+        # Arrays for logging updates and errors
+        self.updated = {"companies": [], "sectors": [],
+                        "countries": [], "exchanges": [], "distributions": []}
+        self.errors = []
+        self.responses = []
+
+    ###########################
+    # Constructor function
+    ###########################
     @classmethod
     def populate(cls):
         esg = cls()
-        esg.populate_companies()
-        esg.populate_sectors()
-        esg.populate_countries()
+        esg.updated["companies"] = esg.populate_companies()
+        esg.updated["sectors"] = esg.populate_avg_scores(Sector)
+        esg.updated["countries"] = esg.populate_avg_scores(Country)
+        esg.updated["distributions"] = esg.populate_distributions()
+        return esg
 
-    def populate_companies(self):
+    ###########################
+    # Companies
+    ###########################
+    def populate_companies(self) -> list:
         """Calls the necessary functions to update outdated ESG ratings"""
 
-        groups = divide_list(self.companies, 10)
+        updated = []
 
-        for group in groups:
-            resp = self.request(group)
+        for company in self.companies:
+            resp = self.request(company)
 
             if not resp.ok:
-                self.api_error(group, resp)
+                self.api_error(company, resp)
                 return self
 
             ratings = resp.json()
+            self.responses.append(ratings)
 
             for rating in ratings:
-                symbol = rating.get('stock_symbol')
-                company = (
-                    Company
-                    .query
-                    .filter_by(symbol=symbol).first()
-                )
-
-                if not company:
+                stock_symbol = rating.get("stock_symbol")
+                company_name = rating.get("company_name")
+                if (stock_symbol != company.symbol.upper() and company_name != company.name):
                     continue
 
-                print("Updated company ->", company.name)
-                self .update_date(rating, company)
+                self.update_symbol(rating, company)
+                self.update_exchange_symbol(rating, company)
+                self.update_date(rating, company)
                 self.update_ratings(rating, company)
-                company.esg_last_retrieved = self.datetime_now
+                updated.append(company)
+                print("Updated", "->", company)
 
-                self.updated.append(company)
-            db.session.commit()
+            if company not in updated:
+                self.esg_error(company)
+                company.esg_available = False
 
-    def api_error(self, group, resp) -> dict:
+            company.esg_last_retrieved = self.datetime_now
+
+        db.session.commit()
+        return updated
+
+    def api_error(self, company, resp):
         """Log information about a request error"""
-        print("API ERROR ->", resp.status_code)
         error = {
             "status_code": resp.status_code,
             "reason": resp.json()['Error'],
-            "companies": group,
+            "company": company,
         }
+        print("API ERROR", "->", error)
         self.errors.append(error)
-        for company in group:
-            self.companies.remove(company)
 
-    def get_exchange_symbols(self) -> list:
-        exchanges = Exchange.query.all()
-        return [e.symbol for e in exchanges]
+    def esg_error(self, company):
+        """Log information about a missing company"""
+        error = {
+            "status_code": 404,
+            "reason": "Company not found",
+            "company": company
+        }
+        print("ESG ERROR", "->", error)
+        self.errors.append(error)
 
     def get_companies(self) -> list:
         return (
@@ -110,21 +133,44 @@ class ESGRatings():
             .all()
         )
 
-    def request(self, companies: list):
-        """Send get requests to ESG Enterprise. Max 50 company symbols per request"""
-        # Requests are made like nyse:aapl,nasdaq:msft
-        pairs = [f"{c.exchange_symbol}:{c.symbol}" for c in companies]
-        q = ",".join(pairs)
+    def request(self, company: list):
+        """Send get request to ESG Enterprise"""
         resp = (
             requests.get(
                 "https://tf689y3hbj.execute-api.us-east-1.amazonaws.com/prod/authorization/search",
                 params={
-                    'q': q,
+                    'q': company.name,
                     'token': ESG_ENTERPRISE_TOKEN
                 }
             )
         )
         return resp
+
+    def update_symbol(self, rating: dict, company) -> None:
+        """Update stock symbol if it's not available in ESG Enterprise"""
+
+        symbol = rating.get("stock_symbol")
+
+        if not symbol:
+            return
+
+        company.symbol = symbol
+
+    def update_exchange_symbol(self, rating: dict, company) -> None:
+        """Update exchange symbol"""
+
+        exchange_symbol = rating.get("exchange_symbol")
+
+        if not exchange_symbol:
+            return
+
+        if not Exchange.query.filter_by(symbol=exchange_symbol).first():
+            new_exchange = Exchange(symbol=exchange_symbol)
+            db.session.add(new_exchange)
+            db.session.commit()
+            print("Added", "->", new_exchange)
+
+        company.exchange_symbol = exchange_symbol
 
     def update_date(self, rating: dict, company) -> None:
         """Update esg_last_updated based on json from ESG Enterprise API"""
@@ -137,7 +183,7 @@ class ESGRatings():
             )
 
     def update_ratings(self, rating: dict, company) -> None:
-        """Update esg ratings based on json from ESG Enterprise API"""
+        """Update company esg ratings based on json from ESG Enterprise API"""
 
         company.environmental_score = rating.get(
             'environment_score', company.environmental_score)
@@ -164,72 +210,78 @@ class ESGRatings():
         company.total_grade = rating.get(
             'total_grade', company.total_grade)
 
-    def populate_sectors(self) -> None:
-        sectors = Sector.query.all()
-
-        for sector in sectors:
-            print("Updated sector ->", sector.name)
-
+    ###########################
+    # Sectors, Countries, Exchanges
+    ###########################
+    def populate_avg_scores(self, cls_) -> list:
+        """Update average ESG-T scores for given objects (sectors, countries or exchanges)"""
+        objects = cls_.query.all()
+        updated = []
+        for object in objects:
             e_scores = [
-                c.environmental_score for c in sector.companies if c.environmental_score != None]
+                c.environmental_score for c in object.companies if c.environmental_score != None]
             s_scores = [
-                c.social_score for c in sector.companies if c.social_score != None]
+                c.social_score for c in object.companies if c.social_score != None]
             g_scores = [
-                c.governance_score for c in sector.companies if c.governance_score != None]
+                c.governance_score for c in object.companies if c.governance_score != None]
             t_scores = [
-                c.total_score for c in sector.companies if c.total_score != None]
+                c.total_score for c in object.companies if c.total_score != None]
 
             if not e_scores or not s_scores or not g_scores or not t_scores:
                 continue
 
-            sector.environmental_score = round(average(e_scores))
-            sector.social_score = round(average(s_scores))
-            sector.governance_score = round(average(g_scores))
-            sector.total_score = round(average(t_scores))
+            object.environmental_score = round(average(e_scores))
+            object.social_score = round(average(s_scores))
+            object.governance_score = round(average(g_scores))
+            object.total_score = round(average(t_scores))
+            updated.append(object)
+            print("Updated", "->", object)
+
+        db.session.commit()
+        return updated
+
+    ###########################
+    # Distributions
+    ###########################
+    def populate_distributions(self) -> list:
+        """Updates the best/worst percentiles for ESGT in each object (Company, Sector, Country, Exchange)"""
+        updated = []
+        for cls_ in [Company, Sector, Country]:
+            d = self.update_distribution(cls_)
+            updated.append(d)
+            print("Updated", "->", d)
+        return updated
+
+    def update_distribution(self, cls_):
+        """Calculates the best/worst percentiles and appends it to the db with name of scores."""
+
+        scores = self.get_scores(cls_)
+        name = cls_.__tablename__
+
+        d = Distribution.query.filter_by(name=name).first()
+
+        if not d:
+            d = Distribution(name=name)
+            db.session.add(d)
+
+        for type in ["environmental", "social", "governance", "total"]:
+            d[f"{type}_best"] = round(percentile(scores[type], 90))
+            d[f"{type}_worst"] = round(percentile(scores[type], 10))
 
         db.session.commit()
 
-    def populate_countries(self) -> None:
-        countries = Country.query.all()
+        return d
 
-        for country in countries:
-            print("Updated country ->", country.name)
+    def get_scores(self, cls_) -> dict:
+        objects = cls_.query.all()
 
-            e_scores = [
-                c.environmental_score for c in country.companies if c.environmental_score != None]
-            s_scores = [
-                c.social_score for c in country.companies if c.social_score != None]
-            g_scores = [
-                c.governance_score for c in country.companies if c.governance_score != None]
-            t_scores = [
-                c.total_score for c in country.companies if c.total_score != None]
-
-            if not e_scores or not s_scores or not g_scores or not t_scores:
-                continue
-
-            country.environmental_score = round(average(e_scores))
-            country.social_score = round(average(s_scores))
-            country.governance_score = round(average(g_scores))
-            country.total_score = round(average(t_scores))
-
-        db.session.commit()
-
-
-""" 
-SELECT
-    symbol,
-    name,
-    exchange_symbol,
-    environmental_score,
-    social_score,
-    governance_score,
-    total_score,
-    esg_last_retrieved,
-    esg_last_updated
-FROM 
-    companies
-WHERE
-    environmental_score IS NOT NULL
-ORDER BY
-    environmental_score DESC; 
-"""
+        return {
+            "environmental":
+            [object.environmental_score for object in objects if object.environmental_score != None],
+            "social":
+            [object.social_score for object in objects if object.social_score != None],
+            "governance":
+            [object.governance_score for object in objects if object.governance_score != None],
+            "total":
+            [object.total_score for object in objects if object.total_score != None]
+        }
