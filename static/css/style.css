@@ -505,6 +505,7 @@ h6,
 
 nav {
   position: relative;
+  z-index: 3;
   background-color: #181830;
   color: white;
   height: 80px;
