@@ -3,4 +3,5 @@ __pycache__/
 models/__pycache__/
 api_tokens.py
 populate/__pycache/
+2degrees.dump
 .DS_Store
