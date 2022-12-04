@@ -1,3 +1,4 @@
+import os
 from math import ceil
 from flask import Flask, render_template, redirect, request, abort, url_for, flash, session, g
 from functools import wraps
@@ -21,11 +22,12 @@ URL_KEY = "url"
 app = Flask(__name__)
 
 app.config.update(
-    SQLALCHEMY_DATABASE_URI='postgresql:///2degrees',
+    SQLALCHEMY_DATABASE_URI=os.environ.get(
+        'DATABASE_URL', 'postgres:///2degrees').replace('://', 'ql://', 1),
+    SECRET_KEY=os.environ.get('SECRET_KEY', "thisismysecret"),
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_ECHO=False,
-    DEBUG_TB_INTERCEPT_REDIRECTS=False,
-    SECRET_KEY="thisismysecret"
+    DEBUG_TB_INTERCEPT_REDIRECTS=False
 )
 
 connect_db(app)
