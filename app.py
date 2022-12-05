@@ -18,6 +18,7 @@ from forms import SignUpForm, LoginForm
 
 CURR_USER_KEY = "curr_user"
 URL_KEY = "url"
+ESG_ENTERPRISE_TOKEN = os.environ.get("ESG_ENTERPRISE_TOKEN")
 
 app = Flask(__name__)
 
