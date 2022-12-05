@@ -27,8 +27,7 @@ class ESGRatings():
 
         `esg.companies` -> All companies initially included in the update
 
-        `esg.updated` -> Companies that were succesfully updated
-
+        `esg.updated.companies` -> Updated companies (sectors, countries, exchanges, and distributions also available)
     """
 
     def __init__(self) -> None:
@@ -50,16 +49,23 @@ class ESGRatings():
     ###########################
     @classmethod
     def populate(cls):
+        print("##################")
+        print("ESGRatings Started")
+        print("##################")
         esg = cls()
         esg.updated["companies"] = esg.populate_companies()
         esg.updated["sectors"] = esg.populate_avg_scores(Sector)
         esg.updated["countries"] = esg.populate_avg_scores(Country)
         esg.updated["distributions"] = esg.populate_distributions()
+        print("##################")
+        print("ESGRatings Ended")
+        print("##################")
         return esg
 
     ###########################
     # Companies
     ###########################
+
     def populate_companies(self) -> list:
         """Calls the necessary functions to update outdated ESG ratings"""
 

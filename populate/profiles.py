@@ -1,15 +1,3 @@
-"""
-Update profiles from Yahoo Finance API
-
-Should be called as a class constructor method.
-
-    p = Profiles.populate() -> Populates outdated profiles.
-
-    p = Profiles.populate(update='all') -> Populates profiles for all stocks
-
-    p = Profiles.populate(update='symbol', symbol='AAPL') -> Populates profile for given stock symbol
-"""
-
 import requests
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import or_
@@ -23,28 +11,36 @@ from models.city import City
 
 
 class Profiles():
-    """Queries outdated profiles"""
+    """
+        Update profiles from Yahoo Finance API
 
-    def __init__(self, update, symbol) -> None:
+        Should be called as a class constructor method.
+
+        `p = Profiles.populate("outdated") -> Populates outdated profiles.`
+
+        `p = Profiles.populate(update="all") -> Populates profiles for all stocks`
+
+        `p = Profiles.populate("companies", companies='[<Company>]') -> Populates profile for given companies`
+        """
+
+    def __init__(self, update, companies) -> None:
         self.datetime_now = datetime.now(timezone.utc)
         self.datetime_oldest = self.datetime_now - timedelta(days=365)
         self.update = update
-        self.symbol = symbol
         self.endpoint = "https://query1.finance.yahoo.com/v10/finance/quoteSummary"
         self.params = {"modules": "assetProfile"}
         self.headers = {'User-agent': 'Mozilla/5.0'}
-        self.companies = self.get_companies()
+        self.companies = self.get_companies(
+        ) if update != "companies" else companies
         self.updated = []
         self.errors = []
 
     @classmethod
-    def populate(cls, update="outdated", symbol=""):
-        """
-        Populates profiles and returns an instance of the Profiles class. 
-        """
-
-        p = cls(update, symbol)
-
+    def populate(cls, update, companies=[]):
+        print("##################")
+        print("Profiles Started")
+        print("##################")
+        p = cls(update, companies)
         for company in p.companies:
             resp = p.request(company.symbol)
 
@@ -62,8 +58,12 @@ class Profiles():
             company.profile_last_retrieved = p.datetime_now
 
             p.updated.append(company)
+            print("Updated", "->", company)
 
         db.session.commit()
+        print("##################")
+        print("Profiles Ended")
+        print("##################")
         return p
 
     def log_error(self, company, resp) -> dict:
@@ -92,7 +92,7 @@ class Profiles():
                     )
                     .all()
                 )
-            case "symbol":
+            case "companies":
                 return [Company.query.filter_by(symbol=self.symbol).first()]
 
     def request(self, symbol: list) -> dict:
