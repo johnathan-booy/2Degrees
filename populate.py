@@ -3,4 +3,5 @@ from populate.profiles import Profiles
 
 esg = ESGRatings.populate()
 
-profiles = Profiles.populate("companies", companies=esg.updated["companies"])
+companies = esg['updated']['companies']
+profiles = Profiles.populate("companies", companies=companies)
