@@ -1,3 +1,4 @@
+autopep8==2.0.0
 bcrypt==4.0.1
 beautifulsoup4==4.11.1
 certifi==2022.9.24
@@ -14,9 +15,12 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.1
 numpy==1.23.5
+psycopg2==2.9.5
+pycodestyle==2.10.0
 requests==2.28.1
 soupsieve==2.3.2.post1
 SQLAlchemy==1.4.44
+tomli==2.0.1
 urllib3==1.26.13
 Werkzeug==2.2.2
 WTForms==3.0.1
