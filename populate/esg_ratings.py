@@ -1,9 +1,8 @@
 import requests
 from numpy import average, percentile
-from api_tokens import ESG_ENTERPRISE_TOKEN
 from datetime import datetime, timezone, timedelta
 from sqlalchemy import or_
-from app import app
+from app import app, ESG_ENTERPRISE_TOKEN
 from database import db
 from models.company import Company
 from models.exchange import Exchange
