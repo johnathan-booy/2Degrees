@@ -1,3 +1,3 @@
 web: gunicorn app:app
-esg: python /populate/esg_ratings.py
-profiles: python /populate/profiles.py
+worker: python /populate/esg_ratings.py
+worker: python /populate/profiles.py
