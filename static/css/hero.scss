@@ -4,6 +4,7 @@
 @use "screens";
 
 .hero-homepage {
+	background-color: colors.$accent-s1;
 	@media (max-width: screens.$tablet) {
 		background-image: -webkit-image-set(
 			url("/static/images/homepage-header-MOBILE-SD.jpg") 1x,
@@ -21,6 +22,7 @@
 	}
 }
 .hero-404 {
+	background-color: colors.$accent-s1;
 	@media (max-width: screens.$tablet) {
 		background-image: -webkit-image-set(
 			url("/static/images/404-MOBILE-SD.jpg") 1x,

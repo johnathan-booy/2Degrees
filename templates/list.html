@@ -107,12 +107,14 @@
 				{% if g.user and name in ["companies", "mylist"]%}
 				{% if object in g.user.companies %}
 				<form class="mylist-form" action="{{url_for('.remove_mylist', id=object.id)}}" method="POST">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 					<button class="mylist-btn">
 						<i class="fa-solid fa-minus"></i>
 					</button>
 				</form>
 				{% else %}
 				<form class="mylist-form" action="{{url_for('.add_mylist', id=object.id)}}" method="POST">
+					<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 					<button class="mylist-btn">
 						<i class="fa-solid fa-plus"></i>
 					</button>

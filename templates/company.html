@@ -9,6 +9,7 @@
     {% if g.user %}
     {% if company in g.user.companies %}
     <form class="mylist-form pb-2" action="{{url_for('.remove_mylist', id=company.id)}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <button class="mylist-btn">
             <i class="fa-solid fa-minus"></i>
         </button>
@@ -16,6 +17,7 @@
     </form>
     {% else %}
     <form class="mylist-form pb-2" action="{{url_for('.add_mylist', id=company.id)}}" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <button class="mylist-btn">
             <i class="fa-solid fa-plus"></i>
         </button>

@@ -14,7 +14,7 @@ from models.sector import Sector
 from models.user import User
 from models.users_companies import users_companies
 from models.distribution import Distribution
-from forms import SignUpForm, LoginForm
+from forms import SignUpForm, LoginForm, csrf
 
 CURR_USER_KEY = "curr_user"
 URL_KEY = "url"
@@ -28,10 +28,10 @@ app.config.update(
     SECRET_KEY=os.environ.get('SECRET_KEY', "thisismysecret"),
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_ECHO=False,
-    DEBUG_TB_INTERCEPT_REDIRECTS=False
-)
+    DEBUG_TB_INTERCEPT_REDIRECTS=False)
 
 connect_db(app)
+csrf.init_app(app)
 
 
 def validate_list(f):
@@ -124,7 +124,6 @@ def signup():
             flash(f"Welcome to 2Degrees, {name}!", "success")
 
             do_login(user)
-
             return redirect(url_for("homepage"))
         except IntegrityError as e:
             error = e.orig.args[0]
@@ -134,6 +133,10 @@ def signup():
             if "users_email_key" in error:
                 flash(
                     f"Email '{form.email.data}' has already been registered.", "danger")
+        except:
+            flash("Oops. Something went wrong.", "danger")
+    else:
+        print("Form not validated", form.errors)
 
     return render_template("signup.html", form=form)
 
@@ -155,6 +158,8 @@ def login():
             return redirect("/")
 
         flash("Invalid username or password.", "danger")
+    else:
+        print("Form not validated", form.errors)
 
     return render_template("login.html", form=form)
 
