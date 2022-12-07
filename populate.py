@@ -1,7 +1,10 @@
+from app import app
 from populate.esg_ratings import ESGRatings
 from populate.profiles import Profiles
 
-esg = ESGRatings.populate()
+with app.app_context():
+    esg = ESGRatings.populate()
 
-companies = esg['updated']['companies']
-profiles = Profiles.populate("companies", companies=companies)
+    companies = esg.updated["companies"]
+    if companies:
+        profiles = Profiles.populate("companies", companies=companies)

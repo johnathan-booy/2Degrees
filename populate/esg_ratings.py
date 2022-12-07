@@ -76,7 +76,7 @@ class ESGRatings():
 
             if not resp.ok:
                 self.api_error(company, resp)
-                return self
+                return updated
 
             ratings = resp.json()
             self.responses.append(ratings)
