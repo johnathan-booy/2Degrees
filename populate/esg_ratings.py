@@ -54,9 +54,10 @@ class ESGRatings():
         print("##################")
         esg = cls()
         esg.updated["companies"] = esg.populate_companies()
-        esg.updated["sectors"] = esg.populate_avg_scores(Sector)
-        esg.updated["countries"] = esg.populate_avg_scores(Country)
-        esg.updated["distributions"] = esg.populate_distributions()
+        if esg.updated["companies"]:
+            esg.updated["sectors"] = esg.populate_avg_scores(Sector)
+            esg.updated["countries"] = esg.populate_avg_scores(Country)
+            esg.updated["distributions"] = esg.populate_distributions()
         print("##################")
         print("ESGRatings Ended")
         print("##################")
